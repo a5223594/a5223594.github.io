@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="redis,">
+  <meta name="keywords" content="FastDFS,">
 
 
 
@@ -79,23 +79,18 @@
 
 
 
-<meta name="description" content="简单动态字符串Redis没有直接使用C语言传统的字符串表示（以空字符结尾的字符数组，以下简称C字符串），而是自己构建了一种名为简单动态字符串（simple dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。比如在Redis的数据库里面，包含字符串值的键值对在底层都是由SDS实现的。举个例子，如果客户端执行命令：12redis&amp;gt; SET msg &amp;qu">
-<meta name="keywords" content="redis">
+<meta name="description" content="简介FastDFS 是一个开源的高性能分布式文件系统（DFS）。 它的主要功能包括：文件存储，文件同步和文件访问，以及高容量和负载平衡。主要解决了海量数据存储问题，特别适合以中小文件（建议范围：4KB &amp;lt; file_size &amp;lt;500MB）为载体的在线服务。  Tracker Server：跟踪服务器，主要做调度工作，起到均衡的作用；负责管理所有的 storage server和 gr">
+<meta name="keywords" content="FastDFS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="redis数据结构与对象">
-<meta property="og:url" content="http://yoursite.com/2019/05/18/redis数据结构与对象/index.html">
+<meta property="og:title" content="FastDFS搭建">
+<meta property="og:url" content="http://yoursite.com/2019/05/20/FastDFS搭建/index.html">
 <meta property="og:site_name" content="黄林杰的个人博客">
-<meta property="og:description" content="简单动态字符串Redis没有直接使用C语言传统的字符串表示（以空字符结尾的字符数组，以下简称C字符串），而是自己构建了一种名为简单动态字符串（simple dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。比如在Redis的数据库里面，包含字符串值的键值对在底层都是由SDS实现的。举个例子，如果客户端执行命令：12redis&amp;gt; SET msg &amp;qu">
+<meta property="og:description" content="简介FastDFS 是一个开源的高性能分布式文件系统（DFS）。 它的主要功能包括：文件存储，文件同步和文件访问，以及高容量和负载平衡。主要解决了海量数据存储问题，特别适合以中小文件（建议范围：4KB &amp;lt; file_size &amp;lt;500MB）为载体的在线服务。  Tracker Server：跟踪服务器，主要做调度工作，起到均衡的作用；负责管理所有的 storage server和 gr">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2019/05/18/redis数据结构与对象/sds示例.png">
-<meta property="og:image" content="http://yoursite.com/2019/05/18/redis数据结构与对象/杜绝溢出1.png">
-<meta property="og:image" content="http://yoursite.com/2019/05/18/redis数据结构与对象/杜绝溢出2.png">
-<meta property="og:image" content="http://yoursite.com/2019/05/18/redis数据结构与对象/SDS总结.png">
-<meta property="og:updated_time" content="2019-05-18T07:21:45.774Z">
+<meta property="og:updated_time" content="2019-05-20T13:37:25.216Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="redis数据结构与对象">
-<meta name="twitter:description" content="简单动态字符串Redis没有直接使用C语言传统的字符串表示（以空字符结尾的字符数组，以下简称C字符串），而是自己构建了一种名为简单动态字符串（simple dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。比如在Redis的数据库里面，包含字符串值的键值对在底层都是由SDS实现的。举个例子，如果客户端执行命令：12redis&amp;gt; SET msg &amp;qu">
-<meta name="twitter:image" content="http://yoursite.com/2019/05/18/redis数据结构与对象/sds示例.png">
+<meta name="twitter:title" content="FastDFS搭建">
+<meta name="twitter:description" content="简介FastDFS 是一个开源的高性能分布式文件系统（DFS）。 它的主要功能包括：文件存储，文件同步和文件访问，以及高容量和负载平衡。主要解决了海量数据存储问题，特别适合以中小文件（建议范围：4KB &amp;lt; file_size &amp;lt;500MB）为载体的在线服务。  Tracker Server：跟踪服务器，主要做调度工作，起到均衡的作用；负责管理所有的 storage server和 gr">
 
 
 
@@ -125,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/05/18/redis数据结构与对象/">
+  <link rel="canonical" href="http://yoursite.com/2019/05/20/FastDFS搭建/">
 
 
 
 
 
-  <title>redis数据结构与对象 | 黄林杰的个人博客</title>
+  <title>FastDFS搭建 | 黄林杰的个人博客</title>
   
 
 
@@ -300,7 +295,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/18/redis数据结构与对象/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/20/FastDFS搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="黄林杰">
@@ -317,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">redis数据结构与对象</h1>
+          <h1 class="post-title" itemprop="name headline">FastDFS搭建</h1>
         
 
         <div class="post-meta">
@@ -329,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-18T14:27:33+08:00">
-                2019-05-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-20T21:29:23+08:00">
+                2019-05-20
               </time>
             
 
@@ -367,30 +362,13 @@
       
 
       
-        <h2 id="简单动态字符串"><a href="#简单动态字符串" class="headerlink" title="简单动态字符串"></a>简单动态字符串</h2><p>Redis没有直接使用C语言传统的字符串表示（以空字符结尾的字符数组，以下简称C字符串），而是自己构建了一种名为简单动态字符串（simple dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。<br>比如在Redis的数据库里面，包含字符串值的键值对在底层都是由SDS实现的。<br>举个例子，如果客户端执行命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; SET msg &quot;hello world&quot;</span><br><span class="line">OK</span><br></pre></td></tr></table></figure></p>
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>FastDFS 是一个开源的高性能分布式文件系统（DFS）。 它的主要功能包括：文件存储，文件同步和文件访问，以及高容量和负载平衡。主要解决了海量数据存储问题，特别适合以中小文件（建议范围：4KB &lt; file_size &lt;500MB）为载体的在线服务。</p>
 <ul>
-<li>键值对的<strong>键</strong>是一个字符串对象，对象的底层实现是一个保存着字符串“msg”的SDS。</li>
-<li>键值对的<strong>值</strong>也是一个字符串对象，对象的底层实现是一个保存着字符串“hello world”的SDS。<br>除了用来保存数据库中的字符串值之外，SDS还被用作缓冲区（buffer）：AOF模块中的AOF缓冲区，以及客户端状态中的输入缓冲区，都是由SDS实现的。</li>
+<li>Tracker Server：跟踪服务器，主要做调度工作，起到均衡的作用；负责管理所有的 storage server和 group，每个 storage 在启动后会连接 Tracker，告知自己所属 group 等信息，并保持周期性心跳。</li>
+<li>Storage Server：存储服务器，主要提供容量和备份服务；以 group 为单位，每个 group 内可以有多台 storage server，数据互为备份。</li>
+<li>Client：客户端，上传下载数据的服务器，也就是我们自己的项目所部署在的服务器。</li>
 </ul>
-<h3 id="SDS的定义"><a href="#SDS的定义" class="headerlink" title="SDS的定义"></a>SDS的定义</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct sdshdr &#123;</span><br><span class="line">    //记录buf数组中已使用字节的数量</span><br><span class="line">    //等于SDS所保存字符串的长度</span><br><span class="line">    int len;</span><br><span class="line">    //记录buf数组中未使用字节的数量 最后字节空字符&apos;\0&apos;不计算在len里</span><br><span class="line">    int free;</span><br><span class="line">    //字节数组，用于保存字符串</span><br><span class="line">    char buf[];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<img src="/2019/05/18/redis数据结构与对象/sds示例.png" title="SDS示例">
-<h3 id="SDS与C字符串的区别"><a href="#SDS与C字符串的区别" class="headerlink" title="SDS与C字符串的区别"></a>SDS与C字符串的区别</h3><ol>
-<li>SDS记录了字符串长度信息，不用遍历整个字符串，O(1)，设置和更新SDS长度的工作由SDS的API自动完成</li>
-<li>杜绝缓冲区溢出，sdscat会先检查给定SDS空间是否足够，如果不够，会扩展SDS空间，在进行拼接操作<img src="/2019/05/18/redis数据结构与对象/杜绝溢出1.png" title="在内存中紧邻的两个C字符串">   
-&lt;string.h&gt;/strcat函数可以将src字符串中的内容拼接到dest字符串的末尾<br>假设要使用strcat函数将redis，修改为redis Cluster，没有为s1分配足够的内存空间，将把s1的数据溢出到s2的空间，修改了s2<img src="/2019/05/18/redis数据结构与对象/杜绝溢出2.png" title="s1的内容溢出到了s2位置">   
-</li>
-</ol>
-<h3 id="SDS空间分配策略"><a href="#SDS空间分配策略" class="headerlink" title="SDS空间分配策略"></a>SDS空间分配策略</h3><p>由于C字符串长度和底层数组的长度之间存在着这种关联性（N+1），所以每次增长或缩短一个C字符串，程序都总要对保存这个C字符串的数组进行一次内存重分配操作</p>
-<ul>
-<li>如果程序执行的是增长字符串的操作，比如拼接操作（append），那么在执行这个操作之前，程序需要先通过内存重分配来扩展底层数组的空间大小——如果忘了这一步就会产生缓冲区溢出。</li>
-<li>如果程序执行的是缩短字符串的操作，比如截断操作（trim），那么在执行这个操作之后，程序需要通过内存重分配来释放字符串不再使用的那部分空间——如果忘了这一步就会产生内存泄漏。<blockquote><p>内存溢出：是指在申请内存时，没有足够的内存供其使用<br>内存泄漏：是指申请内存后，无法释放已申请的内存</p>
-</blockquote>
-为了避免C字符串的这种缺陷，SDS通过未使用空间解除了字符串长度和底层数组长度之间的关联：在SDS中，buf数组的长度不一定就是字符数量加一，数组里面可以包含未使用的字节，而这些字节的数量就由SDS的free属性记录。<h4 id="空间预分配"><a href="#空间预分配" class="headerlink" title="空间预分配"></a>空间预分配</h4>空间预分配用于优化SDS的字符串增长操作：当SDS的API对一个SDS进行修改，并且需要对SDS进行空间扩展的时候，程序不仅会为SDS分配修改所必须要的空间，还会为SDS分配额外的未使用空间。在扩展SDS空间之前，SDS API会先检查未使用空间是否足够，如果足够的话，API就会直接使用未使用空间，而无须执行内存重分配。<br>额外分配的未使用空间数量由以下公式决定：<blockquote><p>如果对SDS进行修改之后，SDS的长度（也即是len属性的值）将小于1MB，那么程序分配和len属性同样大小的未使用空间，这时SDS len属性的值将和free属性的值相同。举个例子，如果进行修改之后，SDS的len将变成13字节，那么程序也会分配13字节的未使用空间，SDS的buf数组的实际长度将变成13+13+1=27字节（额外的一字节用于保存空字符）。<br>如果对SDS进行修改之后，SDS的长度将大于等于1MB，那么程序会分配1MB的未使用空间。举个例子，如果进行修改之后，SDS的len将变成30MB，那么程序会分配1MB的未使用空间，SDS的buf数组的实际长度将为30MB+1MB+1byte。</p>
-</blockquote>
-<h4 id="惰性空间释放"><a href="#惰性空间释放" class="headerlink" title="惰性空间释放"></a>惰性空间释放</h4>惰性空间释放用于优化SDS的字符串缩短操作：当SDS的API需要缩短SDS保存的字符串时，程序并不立即使用内存重分配来回收缩短后多出来的字节，而是<strong>使用free属性</strong>将这些字节的数量记录起来，并等待将来使用。</li>
-</ul>
-<h3 id="二进制安全"><a href="#二进制安全" class="headerlink" title="二进制安全"></a>二进制安全</h3><p>C字符串只能保存文本数据，而不能保存像图片、音频、视频、压缩文件这样的二进制数据。<br>将SDS的buf属性称为字节数组的原因——Redis不是用这个数组来保存字符，而是用它来保存一系列二进制数据。通过使用二进制安全的SDS，而不是C字符串，使得Redis不仅可以保存文本数据，还可以保存任意格式的二进制数据。</p>
-<h3 id="SDS总结"><a href="#SDS总结" class="headerlink" title="SDS总结"></a>SDS总结</h3><img src="/2019/05/18/redis数据结构与对象/SDS总结.png" title="SDS总结"> 
+
       
     </div>
     
@@ -407,7 +385,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/redis/" rel="tag"># redis</a>
+            <a href="/tags/FastDFS/" rel="tag"># FastDFS</a>
           
         </div>
       
@@ -420,8 +398,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/12/zookeeper/" rel="next" title="zookeeper">
-                <i class="fa fa-chevron-left"></i> zookeeper
+              <a href="/2019/05/18/redis数据结构与对象/" rel="next" title="redis数据结构与对象">
+                <i class="fa fa-chevron-left"></i> redis数据结构与对象
               </a>
             
           </div>
@@ -429,10 +407,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/20/FastDFS搭建/" rel="prev" title="FastDFS搭建">
-                FastDFS搭建 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -557,7 +531,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单动态字符串"><span class="nav-number">1.</span> <span class="nav-text">简单动态字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS的定义"><span class="nav-number">1.1.</span> <span class="nav-text">SDS的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS与C字符串的区别"><span class="nav-number">1.2.</span> <span class="nav-text">SDS与C字符串的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS空间分配策略"><span class="nav-number">1.3.</span> <span class="nav-text">SDS空间分配策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#空间预分配"><span class="nav-number">1.3.1.</span> <span class="nav-text">空间预分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#惰性空间释放"><span class="nav-number">1.3.2.</span> <span class="nav-text">惰性空间释放</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制安全"><span class="nav-number">1.4.</span> <span class="nav-text">二进制安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS总结"><span class="nav-number">1.5.</span> <span class="nav-text">SDS总结</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li></ol></div>
             
 
           </div>
