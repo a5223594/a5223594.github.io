@@ -88,7 +88,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2019/06/30/从零开始打造CentOs环境/网卡HWADDR.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/06/30/从零开始打造CentOs环境/redis安装.jpg">
-<meta property="og:updated_time" content="2019-07-07T13:54:18.048Z">
+<meta property="og:updated_time" content="2019-07-12T07:11:42.234Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从零开始打造CentOs环境">
 <meta name="twitter:description" content="目的为redis和java应用搭建一个可以运行的环境 centos7centos7的iso映像文件，下mini版本即可根据VmWare默认安装就行。 配置网卡安装完后进入终端，输入ip addr 不同系统不同版本可能命令不一样，就是主要看他的HADDR，一般都是ens头的网卡。cd /etc/sysconfig/network-script 进到这个目录找到ifcfg开头的与之前网卡名称相同的文件">
@@ -378,6 +378,11 @@
 </li>
 </ol>
 <h2 id="redis的生产环境启动方案"><a href="#redis的生产环境启动方案" class="headerlink" title="redis的生产环境启动方案"></a>redis的生产环境启动方案</h2><p>如果一般的学习课程，你就随便用redis-server启动一下redis，做一些实验，这样的话，没什么意义<br>要把redis作为一个系统的daemon进程去运行的，每次系统启动，redis进程一起启动<br>（1）redis utils目录下，有个redis_init_script脚本<br>（2）将redis_init_script脚本拷贝到linux的/etc/init.d目录中，将redis_init_script重命名为redis_6379，6379是我们希望这个redis实例监听的端口号<br>（3）修改redis_6379脚本的第6行的REDISPORT，设置为相同的端口号（默认就是6379）<br>（4）创建两个目录：/etc/redis（存放redis的配置文件），/var/redis/6379（存放redis的持久化文件）<br>（5）修改redis配置文件（默认在根目录下，redis.conf），拷贝到/etc/redis目录中，修改名称为6379.conf<br>（6）修改redis.conf中的部分配置为生产环境<br>daemonize    yes                            让redis以daemon进程运行<br>pidfile        /var/run/redis_6379.pid     设置redis的pid文件位置<br>port        6379                        设置redis的监听端口号<br>dir         /var/redis/6379                设置持久化文件的存储位置<br>（7）启动redis，执行cd /etc/init.d, chmod 777 redis_6379，./redis_6379 start<br>（8）确认redis进程是否启动，ps -ef | grep redis<br>（9）让redis跟随系统启动自动启动<br>在redis_6379脚本中，最上面，加入两行注释<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># chkconfig:   2345 90 10</span><br><span class="line"># description:  Redis is a persistent key-value database</span><br></pre></td></tr></table></figure><br>chkconfig redis_6379 on</p>
+<h2 id="springboot-jpa-redis-注意事项"><a href="#springboot-jpa-redis-注意事项" class="headerlink" title="springboot jpa-redis 注意事项"></a>springboot jpa-redis 注意事项</h2><ol>
+<li>把reids.conf 里bind 127.0.0.1注释掉，不然无法连接</li>
+<li>把redis保护模式protected-mode yes改成no,不然无法连接</li>
+<li>改一下redisTemplate的序列化，默认jdk序列化会带一串二进制<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">    public RedisTemplate&lt;String, String&gt; redisTemplate(RedisConnectionFactory factory) &#123;</span><br><span class="line">        StringRedisTemplate template = new StringRedisTemplate(factory);</span><br><span class="line">        //定义key序列化方式</span><br><span class="line">        //RedisSerializer&lt;String&gt; redisSerializer = new StringRedisSerializer();//Long类型会出现异常信息;需要我们上面的自定义key生成策略，一般没必要</span><br><span class="line">        //定义value的序列化方式</span><br><span class="line">        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);</span><br><span class="line">        ObjectMapper om = new ObjectMapper();</span><br><span class="line">        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">        jackson2JsonRedisSerializer.setObjectMapper(om);</span><br><span class="line"></span><br><span class="line">        // template.setKeySerializer(redisSerializer);</span><br><span class="line">        template.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        template.setHashValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">        template.afterPropertiesSet();</span><br><span class="line">        return template;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
 
       
     </div>
@@ -411,6 +416,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/09/多线程/" rel="prev" title="多线程">
+                多线程 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -489,7 +498,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -502,7 +511,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -535,7 +544,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#centos7"><span class="nav-number">2.</span> <span class="nav-text">centos7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置网卡"><span class="nav-number">3.</span> <span class="nav-text">配置网卡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置4台CentOS为ssh免密码互相通信"><span class="nav-number">4.</span> <span class="nav-text">配置4台CentOS为ssh免密码互相通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装jdk"><span class="nav-number">5.</span> <span class="nav-text">安装jdk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装perl（给java-nginx-lua）提供环境"><span class="nav-number">6.</span> <span class="nav-text">安装perl（给java+nginx+lua）提供环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装redis单机"><span class="nav-number">7.</span> <span class="nav-text">安装redis单机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis的生产环境启动方案"><span class="nav-number">8.</span> <span class="nav-text">redis的生产环境启动方案</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目的"><span class="nav-number">1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#centos7"><span class="nav-number">2.</span> <span class="nav-text">centos7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置网卡"><span class="nav-number">3.</span> <span class="nav-text">配置网卡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置4台CentOS为ssh免密码互相通信"><span class="nav-number">4.</span> <span class="nav-text">配置4台CentOS为ssh免密码互相通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装jdk"><span class="nav-number">5.</span> <span class="nav-text">安装jdk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装perl（给java-nginx-lua）提供环境"><span class="nav-number">6.</span> <span class="nav-text">安装perl（给java+nginx+lua）提供环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装redis单机"><span class="nav-number">7.</span> <span class="nav-text">安装redis单机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis的生产环境启动方案"><span class="nav-number">8.</span> <span class="nav-text">redis的生产环境启动方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#springboot-jpa-redis-注意事项"><span class="nav-number">9.</span> <span class="nav-text">springboot jpa-redis 注意事项</span></a></li></ol></div>
             
 
           </div>
