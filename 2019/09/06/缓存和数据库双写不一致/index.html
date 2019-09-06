@@ -81,14 +81,14 @@
 
 <meta name="description" content="最初级的缓存不一致问题以及解决方案问题：先修改数据库，再删除缓存，如果删除缓存失败了，那么会导致数据库中是新数据，缓存中是旧数据，数据出现不一致解决思路先删除缓存，再修改数据库，如果删除缓存成功了，如果修改数据库失败了，那么数据库中是旧数据，缓存中是空的，那么数据不会不一致因为读的时候缓存没有，则读数据库中旧数据，然后更新到缓存中 比较复杂的数据不一致问题分析数据发生了变更，先删除了缓存，然后要去">
 <meta property="og:type" content="article">
-<meta property="og:title" content="&#39;缓存和数据库双写不一致&#39;">
+<meta property="og:title" content="缓存和数据库双写不一致">
 <meta property="og:url" content="http://yoursite.com/2019/09/06/缓存和数据库双写不一致/index.html">
 <meta property="og:site_name" content="黄林杰的个人博客">
 <meta property="og:description" content="最初级的缓存不一致问题以及解决方案问题：先修改数据库，再删除缓存，如果删除缓存失败了，那么会导致数据库中是新数据，缓存中是旧数据，数据出现不一致解决思路先删除缓存，再修改数据库，如果删除缓存成功了，如果修改数据库失败了，那么数据库中是旧数据，缓存中是空的，那么数据不会不一致因为读的时候缓存没有，则读数据库中旧数据，然后更新到缓存中 比较复杂的数据不一致问题分析数据发生了变更，先删除了缓存，然后要去">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-06T08:22:25.895Z">
+<meta property="og:updated_time" content="2019-09-06T08:27:40.110Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="&#39;缓存和数据库双写不一致&#39;">
+<meta name="twitter:title" content="缓存和数据库双写不一致">
 <meta name="twitter:description" content="最初级的缓存不一致问题以及解决方案问题：先修改数据库，再删除缓存，如果删除缓存失败了，那么会导致数据库中是新数据，缓存中是旧数据，数据出现不一致解决思路先删除缓存，再修改数据库，如果删除缓存成功了，如果修改数据库失败了，那么数据库中是旧数据，缓存中是空的，那么数据不会不一致因为读的时候缓存没有，则读数据库中旧数据，然后更新到缓存中 比较复杂的数据不一致问题分析数据发生了变更，先删除了缓存，然后要去">
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title>'缓存和数据库双写不一致' | 黄林杰的个人博客</title>
+  <title>缓存和数据库双写不一致 | 黄林杰的个人博客</title>
   
 
 
@@ -311,7 +311,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">'缓存和数据库双写不一致'</h1>
+          <h1 class="post-title" itemprop="name headline">缓存和数据库双写不一致</h1>
         
 
         <div class="post-meta">
