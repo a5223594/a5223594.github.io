@@ -291,7 +291,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/06/缓存和数据库双写不一致/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/CopyOnWriteArrayList/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="黄林杰">
@@ -310,7 +310,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/09/06/缓存和数据库双写不一致/" itemprop="url">缓存和数据库双写不一致</a></h1>
+                <a class="post-title-link" href="/2019/09/25/CopyOnWriteArrayList/" itemprop="url">CopyOnWriteArrayList</a></h1>
         
 
         <div class="post-meta">
@@ -322,8 +322,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-06T16:18:27+08:00">
-                2019-09-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:44:38+08:00">
+                2019-09-25
               </time>
             
 
@@ -362,11 +362,11 @@
       
         
           
-          最初级的缓存不一致问题以及解决方案问题：先修改数据库，再删除缓存，如果删除缓存失败了，那么会导致数据库中是新数据，缓存中是旧数据，数据出现不一致解决思路先删除缓存，再修改数据库，如果删除缓存成功了，如果修改数据库失败了，那么数据库中是旧数据，缓存中是空的，那么数据不会不一致因为读的时候缓存没有，则读
+          所有的修改操作(add/set等)都会将底层依赖的数组拷贝一份并在其之上修改，但是我们知道数组的拷贝是一个比较耗时的操作，因此通常用于读多写少的场景下，例如随机访问、遍历等。有个可重入锁用于修改(add/set等)时保证其线程安全型，另外有一个array数组用于存储实际的数据，并用volatile修
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/09/06/缓存和数据库双写不一致/#more" rel="contents">
+            <a class="btn" href="/2019/09/25/CopyOnWriteArrayList/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -417,7 +417,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/09/多线程/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/LinkedList/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="黄林杰">
@@ -436,7 +436,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/09/多线程/" itemprop="url">多线程</a></h1>
+                <a class="post-title-link" href="/2019/09/25/LinkedList/" itemprop="url">LinkedList</a></h1>
         
 
         <div class="post-meta">
@@ -448,8 +448,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-09T17:11:09+08:00">
-                2019-07-09
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:42:56+08:00">
+                2019-09-25
               </time>
             
 
@@ -488,12 +488,12 @@
       
         
           
-          volatile定义和实现原理有volatile变量修饰的共享变量进行写操作时会多出一行汇编代码以lock前缀，将当前处理器缓存行的数据写回到系统内存，这个写回内存的操作会使其他cpu缓存了该内存地址的数据无效。每个处理器遵循缓存一致性协议，自动嗅探总线上传播的数据来检查自己缓存的数据是否过期
-sy
+          LinkedList是一种可以在任何位置进行高效地插入和移除操作的有序序列，它是基于双向链表实现的，是线程不安全的，允许元素为null的双向链表。
+字段12345678910111213141516transient Node&lt;E&gt; first;transient Node&lt;E&g
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/09/多线程/#more" rel="contents">
+            <a class="btn" href="/2019/09/25/LinkedList/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -544,7 +544,7 @@ sy
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/30/从零开始打造CentOs环境/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/ArrayList/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="黄林杰">
@@ -563,7 +563,7 @@ sy
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/06/30/从零开始打造CentOs环境/" itemprop="url">从零开始打造CentOs环境</a></h1>
+                <a class="post-title-link" href="/2019/09/25/ArrayList/" itemprop="url">ArrayList</a></h1>
         
 
         <div class="post-meta">
@@ -575,8 +575,8 @@ sy
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-30T21:13:34+08:00">
-                2019-06-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:42:26+08:00">
+                2019-09-25
               </time>
             
 
@@ -615,13 +615,11 @@ sy
       
         
           
-          目的为redis和java应用搭建一个可以运行的环境
-centos7centos7的iso映像文件，下mini版本即可根据VmWare默认安装就行。
-配置网卡安装完后进入终端，输入ip addr 不同系统不同版本可能命令不一样，就是主要看他的HADDR，一般都是ens头的网卡。cd /etc/sys
+          字段int DEFAULT_CAPACITY = 10;Object[] EMPTY_ELEMENTDATA = {};Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};transient 在已经实现序列化的类中，不允许某变量序列化transient O
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/06/30/从零开始打造CentOs环境/#more" rel="contents">
+            <a class="btn" href="/2019/09/25/ArrayList/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -672,7 +670,7 @@ centos7centos7的iso映像文件，下mini版本即可根据VmWare默认安装�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/20/FastDFS搭建/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/HashMap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="黄林杰">
@@ -691,7 +689,7 @@ centos7centos7的iso映像文件，下mini版本即可根据VmWare默认安装�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/05/20/FastDFS搭建/" itemprop="url">FastDFS搭建</a></h1>
+                <a class="post-title-link" href="/2019/09/25/HashMap/" itemprop="url">HashMap</a></h1>
         
 
         <div class="post-meta">
@@ -703,8 +701,8 @@ centos7centos7的iso映像文件，下mini版本即可根据VmWare默认安装�
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-20T21:29:23+08:00">
-                2019-05-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:41:32+08:00">
+                2019-09-25
               </time>
             
 
@@ -743,13 +741,13 @@ centos7centos7的iso映像文件，下mini版本即可根据VmWare默认安装�
       
         
           
-          简介FastDFS 是一个开源的高性能分布式文件系统（DFS）。 它的主要功能包括：文件存储，文件同步和文件访问，以及高容量和负载平衡。主要解决了海量数据存储问题，特别适合以中小文件（建议范围：4KB &lt; file_size &lt;500MB）为载体的在线服务。
-
-Tracker Serve
+          结构HashMap是数组+链表+红黑树，node数组，Node是HashMap的一个内部类，实现了Map.Entry接口，本质是就是一个映射(键值对)。
+解决冲突HashMap采用了链地址法解决冲突。
+字段及初始值Node[] table的初始化长度length(默认值是16)。Load facto
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/05/20/FastDFS搭建/#more" rel="contents">
+            <a class="btn" href="/2019/09/25/HashMap/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -800,7 +798,7 @@ Tracker Serve
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/18/redis数据结构与对象/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/协议与设备/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="黄林杰">
@@ -819,7 +817,7 @@ Tracker Serve
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/05/18/redis数据结构与对象/" itemprop="url">redis数据结构与对象</a></h1>
+                <a class="post-title-link" href="/2019/09/25/协议与设备/" itemprop="url">协议与设备</a></h1>
         
 
         <div class="post-meta">
@@ -831,8 +829,8 @@ Tracker Serve
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-18T14:27:33+08:00">
-                2019-05-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:30:49+08:00">
+                2019-09-25
               </time>
             
 
@@ -871,11 +869,14 @@ Tracker Serve
       
         
           
-          简单动态字符串Redis没有直接使用C语言传统的字符串表示（以空字符结尾的字符数组，以下简称C字符串），而是自己构建了一种名为简单动态字符串（simple dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。比如在Redis的数据库里面，包含字符串值的键值对在
+          各种设备
+中继器(信号放大与整形)：物理层集线器Hub(可以有多个端口，也是信号放大与整形)：物理层交换机(在多端口之间同时转发多帧)：MAC层网桥(MAC地址过滤与帧转发)：数据链路层(MAC层)路由器(连接两个网络，对分组报文进行转发的设备)：网络层网关(协议的转换与数据的转发)：网络层以上
+
+
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/05/18/redis数据结构与对象/#more" rel="contents">
+            <a class="btn" href="/2019/09/25/协议与设备/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -926,7 +927,7 @@ Tracker Serve
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/12/zookeeper/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/应用层/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="黄林杰">
@@ -945,7 +946,7 @@ Tracker Serve
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/05/12/zookeeper/" itemprop="url">zookeeper</a></h1>
+                <a class="post-title-link" href="/2019/09/25/应用层/" itemprop="url">应用层</a></h1>
         
 
         <div class="post-meta">
@@ -957,8 +958,8 @@ Tracker Serve
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-12T13:31:42+08:00">
-                2019-05-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:30:30+08:00">
+                2019-09-25
               </time>
             
 
@@ -997,13 +998,519 @@ Tracker Serve
       
         
           
-          zookeeper是什么ZooKeeper是一个分布式的，开放源码的分布式应用程序协调服务具体介绍可以看官方网站：https://zookeeper.apache.org/
-zookeeper能做什么
-配置维护：在分布式系统中，一般会把服务部署到n台机器上，服务配置文件都是相同的，如果配置文件的配置
+          应用层( application-layer ）的任务是通过应用进程间的交互来完成特定网络应用。应用层协议定义的是应用进程（进程：主机中正在运行的程序）间的通信和交互的规则。对于不同的网络应用需要不同的应用层协议。在互联网中应用层协议很多，如域名系统 DNS，支持万维网应用的 HTTP 协议，支持电
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/05/12/zookeeper/#more" rel="contents">
+            <a class="btn" href="/2019/09/25/应用层/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/传输层/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄林杰">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/myavatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黄林杰的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/25/传输层/" itemprop="url">传输层</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:30:20+08:00">
+                2019-09-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          TCP报文（标准长度20字节）
+TCP数据包每次能够传输的最大长度 = MTU(1500B) - IP头（20B）- TCP头（20B）= 1460Bytes。源端口号与目的端口号：标识了发送方与接收方的地址，IP地址和端口号合称为套接字。
+字段
+序列号和确认号：32位序列号与32位确认序号：序列号
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/09/25/传输层/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/http/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄林杰">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/myavatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黄林杰的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/25/http/" itemprop="url">http</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:30:06+08:00">
+                2019-09-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/09/25/http/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/索引/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄林杰">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/myavatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黄林杰的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/25/索引/" itemprop="url">索引</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:23:37+08:00">
+                2019-09-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          什么是索引？“索引”是为了能够更快地查询数据。比如一本书的目录，就是这本书的内容的索引，读者可以通过在目录中快速查找自己想要的内容，然后根据页码去找到具体的章节。数据库也是一样，如果查询语句使用到了索引，会先去索引里面查询，取得数据所在行的物理地址，进而访问数据。
+索引的优缺点优势：以快速检索，减少
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/09/25/索引/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/存储引擎/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄林杰">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/myavatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黄林杰的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/25/存储引擎/" itemprop="url">存储引擎</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:23:25+08:00">
+                2019-09-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          MyISAM和InnoDB区别MyISAM是MySQL的默认数据库引擎（5.5版之前）。虽然性能极佳，而且提供了大量的特性，包括全文索引、压缩、空间函数等，但MyISAM不支持事务和行级锁，而且最大的缺陷就是崩溃后无法安全恢复。不过，5.5版本之后，MySQL引入了InnoDB（事务性数据库引擎），
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/09/25/存储引擎/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1044,6 +1551,10 @@ zookeeper能做什么
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1089,7 +1600,7 @@ zookeeper能做什么
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1101,10 +1612,10 @@ zookeeper能做什么
               
               
               <div class="site-state-item site-state-tags">
-                
-                  <span class="site-state-item-count">3</span>
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
-                
+                </a>
               </div>
             
 
