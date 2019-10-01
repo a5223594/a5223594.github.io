@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mysql,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="组合两个表题目 解答1select p.FirstName,p.LastName,a.City,a.State from Person p left join Address on p.PersonId = a.PersonId; 第二高薪水（成绩第二高）题目 解答12// 分成两部分，第一块是最高的薪水，第二个是比最高薪水小的最高的薪水select Max(Salary) SecondHighe">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql练习">
+<meta property="og:url" content="http://yoursite.com/2019/10/01/sql练习/index.html">
+<meta property="og:site_name" content="黄林杰的个人博客">
+<meta property="og:description" content="组合两个表题目 解答1select p.FirstName,p.LastName,a.City,a.State from Person p left join Address on p.PersonId = a.PersonId; 第二高薪水（成绩第二高）题目 解答12// 分成两部分，第一块是最高的薪水，第二个是比最高薪水小的最高的薪水select Max(Salary) SecondHighe">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427141648369.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427142135808.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427144045666.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427144502979.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427144832555.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427145522214.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427145544425.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427145945298.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427150450545.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180427150643550.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180428090117569.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/微信图片_20191001214616.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180428091939613.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180428092347946.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180428094049782.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180428094346964.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180428104238138.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/01/sql练习/20180428104953585.png">
+<meta property="og:updated_time" content="2019-10-01T15:50:43.859Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sql练习">
+<meta name="twitter:description" content="组合两个表题目 解答1select p.FirstName,p.LastName,a.City,a.State from Person p left join Address on p.PersonId = a.PersonId; 第二高薪水（成绩第二高）题目 解答12// 分成两部分，第一块是最高的薪水，第二个是比最高薪水小的最高的薪水select Max(Salary) SecondHighe">
+<meta name="twitter:image" content="http://yoursite.com/2019/10/01/sql练习/20180427141648369.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/01/sql练习/">
+
+
+
+
+
+  <title>sql练习 | 黄林杰的个人博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">黄林杰的个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/01/sql练习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄林杰">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/myavatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黄林杰的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sql练习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-01T23:45:16+08:00">
+                2019-10-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="组合两个表"><a href="#组合两个表" class="headerlink" title="组合两个表"></a>组合两个表</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180427141648369.png">
+<h3 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select p.FirstName,p.LastName,a.City,a.State from Person p left join Address on p.PersonId = a.PersonId;</span><br></pre></td></tr></table></figure>
+<h2 id="第二高薪水（成绩第二高）"><a href="#第二高薪水（成绩第二高）" class="headerlink" title="第二高薪水（成绩第二高）"></a>第二高薪水（成绩第二高）</h2><h3 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180427142135808.png">
+<h3 id="解答-1"><a href="#解答-1" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 分成两部分，第一块是最高的薪水，第二个是比最高薪水小的最高的薪水</span><br><span class="line">select Max(Salary) SecondHighestSalary from Employee where (select Max(Salary) from Employee) &gt; Salary;</span><br></pre></td></tr></table></figure>
+<h2 id="第N高的薪水"><a href="#第N高的薪水" class="headerlink" title="第N高的薪水"></a>第N高的薪水</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>第二题的扩展</p>
+<h3 id="解答-2"><a href="#解答-2" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 自表关联，拿出表e1的每一行数据分别和e2的全数据比较，计算出有多少薪水大于e1的那一行薪水，有多少比它大，即排名第N</span><br><span class="line">Select Max(Salary) from Employee e1 where N = (select count(distinct(e2.Salary)) from Employee e2 where e2.Salary &gt;= e1.Salary);</span><br></pre></td></tr></table></figure>
+<h2 id="分数排名"><a href="#分数排名" class="headerlink" title="分数排名"></a>分数排名</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>编写一个 SQL查询来实现分数排名。如果两个分数相同，则两个分数排名（Rank）相同。请注意，平分后的下一个名次应该是下一个连续的整数值。换句话说，名次之间不应该有“间隔”。</p>
+<img src="/2019/10/01/sql练习/20180427144045666.png">
+<h3 id="解答-3"><a href="#解答-3" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//对每一行数据，找到比他大的分数个数即可</span><br><span class="line">SELECT Score,(SELECT count(DISTINCT Score) FROM Scores WHERE Score &gt;= s.Score) &apos;Rank&apos;</span><br><span class="line">FROM Scores s ORDER BY Score DESC;</span><br></pre></td></tr></table></figure>
+<h2 id="连续出现的数字"><a href="#连续出现的数字" class="headerlink" title="连续出现的数字"></a>连续出现的数字</h2><h3 id="题目-4"><a href="#题目-4" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180427144502979.png">
+<h3 id="解答-4"><a href="#解答-4" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select distinct l1.num from logs l1</span><br><span class="line">left join logs l2 on l1.id = l2.id -1 </span><br><span class="line">left join logs l3 on l1.id = l3.id -2</span><br><span class="line">where l1.num = l2.num and l2.num = l3.num</span><br></pre></td></tr></table></figure>
+<h2 id="超过经理收入的员工"><a href="#超过经理收入的员工" class="headerlink" title="超过经理收入的员工"></a>超过经理收入的员工</h2><h3 id="题目-5"><a href="#题目-5" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180427144832555.png">
+<h3 id="解答-5"><a href="#解答-5" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select name from employee e1 where salary &gt; (select e2.salary from employee e2 where e1.ManagerId = e2.id)</span><br></pre></td></tr></table></figure>
+<h2 id="寻找重复的电子邮箱"><a href="#寻找重复的电子邮箱" class="headerlink" title="寻找重复的电子邮箱"></a>寻找重复的电子邮箱</h2><h3 id="题目-6"><a href="#题目-6" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180427145522214.png">
+<h3 id="解答-6"><a href="#解答-6" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select Email from Person group by Email having counnt(Email)&gt;1;</span><br></pre></td></tr></table></figure>
+<h2 id="从不订购的客户"><a href="#从不订购的客户" class="headerlink" title="从不订购的客户"></a>从不订购的客户</h2><h3 id="题目-7"><a href="#题目-7" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180427145544425.png">
+<h3 id="解答-7"><a href="#解答-7" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 直接左连接，取出CustomerId = null的项</span><br><span class="line">select c.name Customers from Customers c</span><br><span class="line">left join Orders o on o.CustomersId = c.id where o.CustomerId is null</span><br></pre></td></tr></table></figure>
+<h2 id="部门最高工资"><a href="#部门最高工资" class="headerlink" title="部门最高工资"></a>部门最高工资</h2><h3 id="题目-8"><a href="#题目-8" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180427145945298.png">
+<h3 id="解答-8"><a href="#解答-8" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//解法1：内联e1和d，找到e1的每一行对应e2departmentid相同的列表的最大值</span><br><span class="line">select d.Name Department,e1.Name Employee,e1.Salary Salary </span><br><span class="line">from Employee e1</span><br><span class="line">inner join Department d on e1.DepartmentId= d.Id</span><br><span class="line">where e1.Salary in (select Max(e2.Salary) from Employee e2 where e2.DepartmentId =e1.DepartmentId)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//解法2：直接group by DepartmentId 找到最大值，在对应查其他项就行了</span><br><span class="line">select d.Name Department,e1.Name Employee,e1.Salary Salary</span><br><span class="line">from Employee e1,Department d</span><br><span class="line">where e1.DepartmentId = d.Id and(e1.Salary,e1.DepartmentId)</span><br><span class="line">in (select max(Salary),DepartmentId from Employee group by DepartmentId)</span><br></pre></td></tr></table></figure>
+<h2 id="部门前三收入"><a href="#部门前三收入" class="headerlink" title="部门前三收入"></a>部门前三收入</h2><h3 id="题目-9"><a href="#题目-9" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180427150450545.png">
+<h3 id="解答-9"><a href="#解答-9" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select d.Name Department,e1.Name Employee,e1.Salary Salary</span><br><span class="line">from Employee e1</span><br><span class="line">inner join Department d on e1.DepartmentId = d.Id</span><br><span class="line">where 3&gt;= (</span><br><span class="line">	select count(distinct(e2.salary)) from Employee e2 where e2.Salary &gt;=e1.Salary and e2.departmentId = d.Id</span><br><span class="line">) order by d.name,e1.Salary desc;</span><br></pre></td></tr></table></figure>
+<h2 id="删除重复邮件"><a href="#删除重复邮件" class="headerlink" title="删除重复邮件"></a>删除重复邮件</h2><h3 id="题目-10"><a href="#题目-10" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180427150643550.png">
+<h3 id="解答-10"><a href="#解答-10" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DELETE p2 FROM Person p1 JOIN Person p2</span><br><span class="line">ON p2.Email = p1.Email WHERE p2.Id &gt; p1.Id;</span><br></pre></td></tr></table></figure>
+<h2 id="上升的温度"><a href="#上升的温度" class="headerlink" title="上升的温度"></a>上升的温度</h2><h3 id="题目-11"><a href="#题目-11" class="headerlink" title="题目"></a>题目</h3><p>给定一个Weather表，编写一个SQL查询来查找与之前(昨天的)日期相比温度更高的所有日期的id。</p>
+<img src="/2019/10/01/sql练习/20180428090117569.png">
+<h3 id="解答-11"><a href="#解答-11" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//mysql的函数DATEDIFF</span><br><span class="line">select w1.id from weather w1</span><br><span class="line">inner join weather w2 on w1.Temperature &gt; w2.Temperature and DATEDIFF(w1.RecordDate, w2.RecordDate) = 1;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//mysql的函数TO_DAYS</span><br><span class="line">SELECT w1.Id FROM Weather w1, Weather w2</span><br><span class="line">WHERE w1.Temperature &gt; w2.Temperature AND TO_DAYS(w1.RecordDate)=TO_DAYS(w2.RecordDate) + 1;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//mysql的函数SUBDATE</span><br><span class="line">SELECT w1.Id FROM Weather w1, Weather w2</span><br><span class="line">WHERE w1.Temperature &gt; w2.Temperature AND SUBDATE(w1.RecordDate, 1) = w2.RecordDate;</span><br></pre></td></tr></table></figure>
+<h2 id="行程和用户"><a href="#行程和用户" class="headerlink" title="行程和用户"></a>行程和用户</h2><h3 id="题目-12"><a href="#题目-12" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/微信图片_20191001214616.png">
+<h3 id="解答-12"><a href="#解答-12" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select t.Request_at Day,</span><br><span class="line">ROUND(sum((case when t.Status like &apos;cancelled%&apos; then 1 else 0 end))/count(*),2) &apos;Cancellation&apos;</span><br><span class="line">from Trips t</span><br><span class="line">inner join Users u on u.Users_Id = t.Client_Id and u.Banned = &apos;No&apos;</span><br><span class="line">where t.Request_at between &apos;2013-10-01&apos; and &apos;2013-10-03&apos; group by t.Request_at;</span><br></pre></td></tr></table></figure>
+<h2 id="大的国家"><a href="#大的国家" class="headerlink" title="大的国家"></a>大的国家</h2><h3 id="题目-13"><a href="#题目-13" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180428091939613.png">
+<h3 id="解答-13"><a href="#解答-13" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select name,population,area from worldwhere area &gt; 3000000 or population &gt; 25000000;</span><br></pre></td></tr></table></figure>
+<h2 id="超过5名学生的课"><a href="#超过5名学生的课" class="headerlink" title="超过5名学生的课"></a>超过5名学生的课</h2><h3 id="题目-14"><a href="#题目-14" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180428092347946.png">
+<h3 id="解答-14"><a href="#解答-14" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT class from courses group by class having count(DISTINCT student) &gt;= 5;</span><br></pre></td></tr></table></figure>
+<h2 id="体育馆的人流量"><a href="#体育馆的人流量" class="headerlink" title="体育馆的人流量"></a>体育馆的人流量</h2><h3 id="题目-15"><a href="#题目-15" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180428094049782.png">
+<h3 id="解答-15"><a href="#解答-15" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><figcaption><span>distinct s1.*</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 困难的题= =</span><br><span class="line">select distinct s1.*</span><br><span class="line">from stadium s1, stadium s2, stadium s3</span><br><span class="line">where s1.people &gt;= 100 and s2.people&gt;= 100 and s3.people &gt;= 100</span><br><span class="line">and</span><br><span class="line">(</span><br><span class="line">    (s1.id - s2.id = 1 and s2.id - s3.id =1)</span><br><span class="line">   or</span><br><span class="line">   (s2.id - s1.id = 1 and s1.id - s3.id =1) </span><br><span class="line">   or</span><br><span class="line">   (s3.id - s2.id = 1 and s2.id - s1.id = 1) </span><br><span class="line">) order by s1.id;</span><br></pre></td></tr></table></figure>
+<h2 id="有趣的电影"><a href="#有趣的电影" class="headerlink" title="有趣的电影"></a>有趣的电影</h2><h3 id="题目-16"><a href="#题目-16" class="headerlink" title="题目"></a>题目</h3><p>找出所有影片描述为<strong>非</strong><code>boring</code>(不无聊)的并且<strong>id 为奇数</strong>的影片，结果请按等级<code>rating</code>排列。</p>
+<img src="/2019/10/01/sql练习/20180428094346964.png">
+<h3 id="解答-16"><a href="#解答-16" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from cinema where description &lt;&gt;&apos;boring&apos; and mod(id,2)=1 ORDER BY rating desc</span><br></pre></td></tr></table></figure>
+<h2 id="换座位"><a href="#换座位" class="headerlink" title="换座位"></a>换座位</h2><h3 id="题目-17"><a href="#题目-17" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180428104238138.png">
+<h3 id="解答-17"><a href="#解答-17" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//奇数+1，偶数-1</span><br><span class="line">select s.id,s.student FROM</span><br><span class="line">(</span><br><span class="line">	select id-1 as id,student from seat where mod(id,2) = 0</span><br><span class="line">	UNION</span><br><span class="line">	select id+1 as id,student from seat where mod(id,2) = 1 and id !=(select count(*) from seat)</span><br><span class="line">	UNION</span><br><span class="line">	select id,student from seat where mod(id,2) = 1 and id = (select count(*) from seat)</span><br><span class="line">) s order by id;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//奇数且不是最后一行，id+1,其余-1</span><br><span class="line">select (case</span><br><span class="line">		when mod(id,2)!=0 and id !=counts then id+1</span><br><span class="line">		when mod(id,2)!=0 and id = counts then id</span><br><span class="line">		else id-1 end) as id,student</span><br><span class="line">		from seat,(select count(*) as counts from seat) as seat_counts</span><br><span class="line">		order by id;</span><br></pre></td></tr></table></figure>
+<h2 id="交换工资"><a href="#交换工资" class="headerlink" title="交换工资"></a>交换工资</h2><h3 id="题目-18"><a href="#题目-18" class="headerlink" title="题目"></a>题目</h3><img src="/2019/10/01/sql练习/20180428104953585.png">
+<h3 id="解答-18"><a href="#解答-18" class="headerlink" title="解答"></a>解答</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update salary set sex = if(sex = &apos;m&apos;, &apos;f&apos;,&apos;m&apos;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UPDATE salary SET sex  = (CASE WHEN sex = &apos;m&apos; THEN &apos;f&apos; ELSE &apos;m&apos; END)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/01/zookeeper概念/" rel="next" title="zookeeper学习2">
+                <i class="fa fa-chevron-left"></i> zookeeper学习2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/myavatar.jpg" alt="黄林杰">
+            
+              <p class="site-author-name" itemprop="name">黄林杰</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#组合两个表"><span class="nav-number">1.</span> <span class="nav-text">组合两个表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目"><span class="nav-number">1.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答"><span class="nav-number">1.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二高薪水（成绩第二高）"><span class="nav-number">2.</span> <span class="nav-text">第二高薪水（成绩第二高）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-1"><span class="nav-number">2.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-1"><span class="nav-number">2.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第N高的薪水"><span class="nav-number">3.</span> <span class="nav-text">第N高的薪水</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-2"><span class="nav-number">3.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-2"><span class="nav-number">3.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分数排名"><span class="nav-number">4.</span> <span class="nav-text">分数排名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-3"><span class="nav-number">4.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-3"><span class="nav-number">4.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连续出现的数字"><span class="nav-number">5.</span> <span class="nav-text">连续出现的数字</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-4"><span class="nav-number">5.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-4"><span class="nav-number">5.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#超过经理收入的员工"><span class="nav-number">6.</span> <span class="nav-text">超过经理收入的员工</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-5"><span class="nav-number">6.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-5"><span class="nav-number">6.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#寻找重复的电子邮箱"><span class="nav-number">7.</span> <span class="nav-text">寻找重复的电子邮箱</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-6"><span class="nav-number">7.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-6"><span class="nav-number">7.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从不订购的客户"><span class="nav-number">8.</span> <span class="nav-text">从不订购的客户</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-7"><span class="nav-number">8.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-7"><span class="nav-number">8.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部门最高工资"><span class="nav-number">9.</span> <span class="nav-text">部门最高工资</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-8"><span class="nav-number">9.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-8"><span class="nav-number">9.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部门前三收入"><span class="nav-number">10.</span> <span class="nav-text">部门前三收入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-9"><span class="nav-number">10.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-9"><span class="nav-number">10.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除重复邮件"><span class="nav-number">11.</span> <span class="nav-text">删除重复邮件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-10"><span class="nav-number">11.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-10"><span class="nav-number">11.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上升的温度"><span class="nav-number">12.</span> <span class="nav-text">上升的温度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-11"><span class="nav-number">12.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-11"><span class="nav-number">12.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行程和用户"><span class="nav-number">13.</span> <span class="nav-text">行程和用户</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-12"><span class="nav-number">13.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-12"><span class="nav-number">13.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#大的国家"><span class="nav-number">14.</span> <span class="nav-text">大的国家</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-13"><span class="nav-number">14.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-13"><span class="nav-number">14.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#超过5名学生的课"><span class="nav-number">15.</span> <span class="nav-text">超过5名学生的课</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-14"><span class="nav-number">15.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-14"><span class="nav-number">15.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#体育馆的人流量"><span class="nav-number">16.</span> <span class="nav-text">体育馆的人流量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-15"><span class="nav-number">16.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-15"><span class="nav-number">16.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#有趣的电影"><span class="nav-number">17.</span> <span class="nav-text">有趣的电影</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-16"><span class="nav-number">17.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-16"><span class="nav-number">17.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#换座位"><span class="nav-number">18.</span> <span class="nav-text">换座位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-17"><span class="nav-number">18.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-17"><span class="nav-number">18.2.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#交换工资"><span class="nav-number">19.</span> <span class="nav-text">交换工资</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目-18"><span class="nav-number">19.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-18"><span class="nav-number">19.2.</span> <span class="nav-text">解答</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄林杰</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
