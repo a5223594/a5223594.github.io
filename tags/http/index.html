@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="集合&容器,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -79,18 +79,13 @@
 
 
 
-<meta name="description" content="所有的修改操作(add/set等)都会将底层依赖的数组拷贝一份并在其之上修改，但是我们知道数组的拷贝是一个比较耗时的操作，因此通常用于读多写少的场景下，例如随机访问、遍历等。有个可重入锁用于修改(add/set等)时保证其线程安全型，另外有一个array数组用于存储实际的数据，并用volatile修饰，保证可见性。 字段12345678910final transient ReentrantLoc">
-<meta name="keywords" content="集合&amp;容器">
-<meta property="og:type" content="article">
-<meta property="og:title" content="CopyOnWriteArrayList">
-<meta property="og:url" content="http://yoursite.com/2019/09/25/CopyOnWriteArrayList/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="黄林杰的个人博客">
+<meta property="og:url" content="http://yoursite.com/tags/http/index.html">
 <meta property="og:site_name" content="黄林杰的个人博客">
-<meta property="og:description" content="所有的修改操作(add/set等)都会将底层依赖的数组拷贝一份并在其之上修改，但是我们知道数组的拷贝是一个比较耗时的操作，因此通常用于读多写少的场景下，例如随机访问、遍历等。有个可重入锁用于修改(add/set等)时保证其线程安全型，另外有一个array数组用于存储实际的数据，并用volatile修饰，保证可见性。 字段12345678910final transient ReentrantLoc">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-25T05:45:00.287Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CopyOnWriteArrayList">
-<meta name="twitter:description" content="所有的修改操作(add/set等)都会将底层依赖的数组拷贝一份并在其之上修改，但是我们知道数组的拷贝是一个比较耗时的操作，因此通常用于读多写少的场景下，例如随机访问、遍历等。有个可重入锁用于修改(add/set等)时保证其线程安全型，另外有一个array数组用于存储实际的数据，并用volatile修饰，保证可见性。 字段12345678910final transient ReentrantLoc">
+<meta name="twitter:title" content="黄林杰的个人博客">
 
 
 
@@ -120,13 +115,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/09/25/CopyOnWriteArrayList/">
+  <link rel="canonical" href="http://yoursite.com/tags/http/">
 
 
 
 
 
-  <title>CopyOnWriteArrayList | 黄林杰的个人博客</title>
+  <title>标签: http | 黄林杰的个人博客</title>
   
 
 
@@ -145,7 +140,7 @@
     
   
 
-  <div class="container sidebar-position-right page-post-detail">
+  <div class="container sidebar-position-right ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -281,156 +276,52 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block tag">
 
-  
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <h1>http<small>标签</small>
+        </h1>
+      </div>
 
-  
-  
-  
+      
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/CopyOnWriteArrayList/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="黄林杰">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/../images/myavatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="黄林杰的个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">CopyOnWriteArrayList</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
+            <a class="post-title-link" href="/2019/09/25/http/" itemprop="url">
               
-                <span class="post-meta-item-text">发表于</span>
+                <span itemprop="name">http</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:44:38+08:00">
-                2019-09-25
-              </time>
-            
+            </a>
+        
+      </h2>
 
-            
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2019-09-25T13:30:06+08:00" content="2019-09-25">
+          09-25
+        </time>
+      </div>
 
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>所有的修改操作(add/set等)都会将底层依赖的数组拷贝一份并在其之上修改，但是我们知道数组的拷贝是一个比较耗时的操作，因此通常用于读多写少的场景下，例如随机访问、遍历等。<br>有个可重入锁用于修改(add/set等)时保证其线程安全型，另外有一个array数组用于存储实际的数据，并用volatile修饰，保证可见性。</p>
-<h2 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">final transient ReentrantLock lock = new ReentrantLock();</span><br><span class="line">    private transient volatile Object[] array;</span><br><span class="line"> </span><br><span class="line">    final Object[] getArray() &#123;</span><br><span class="line">        return array;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    final void setArray(Object[] a) &#123;</span><br><span class="line">        array = a;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h2 id="add-E-e"><a href="#add-E-e" class="headerlink" title="add(E e)"></a>add(E e)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public boolean add(E e) &#123;</span><br><span class="line">       final ReentrantLock lock = this.lock;</span><br><span class="line">       lock.lock();</span><br><span class="line">       try &#123;</span><br><span class="line">           Object[] elements = getArray();</span><br><span class="line">           int len = elements.length;</span><br><span class="line">           Object[] newElements = Arrays.copyOf(elements, len + 1);</span><br><span class="line">           newElements[len] = e;</span><br><span class="line">           setArray(newElements);</span><br><span class="line">           return true;</span><br><span class="line">       &#125; finally &#123;</span><br><span class="line">           lock.unlock();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p>在add()方法中也没有想ArrayList一样去判断当前数组的容量并去扩容，将当前数组的内容复制到新数组中，新数组的大小是老数组的长度+1，因此每次新增操作都会导致CopyOnWriteArrayList的长度自增。<br>拷贝完成后将元素添加到新数组中。<br>用新数组替换当前数组，用volatile修饰保证后续对其他线程可见性</p>
-<p>读取并没有加锁，因此对于读取操作来说可能会存在延迟，读取不到最新的数据，这里读取通过getArray()方法获取的相当于是一个快照，在修改才做完成前，我们读取的都是这个快照数组的内容，对于遍历也是类似，其内部会利用这个快照数组构造一个新的构造器，因此这里遍历才不需要加锁，但是相对的，之后的add/remove/set等操作不会对迭代器造成任务影响，迭代器也不支持remove操作，也就不会抛出ConcurrentModificationException异常。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>CopyOnArrayList使用与读多写少的场景，而且存储的对象最好不要太多，加入CopyOnArrayList中存储的数据比较多，那么每一次修改才做都会造成一次大对象拷贝，造成YGC甚至是FULL GC，因此使用前一定要考虑好场景。另外一个是由于读取都是快照读，因此会存在一定的延时造成读取不到最新的数据。</p>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/集合-容器/" rel="tag"># 集合&容器</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2019/09/25/LinkedList/" rel="next" title="LinkedList">
-                <i class="fa fa-chevron-left"></i> LinkedList
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/30/7种垃圾收集器/" rel="prev" title="7种垃圾收集器">
-                7种垃圾收集器 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
       
     </div>
+
   </div>
+  
+  
+  
+
+  
 
 
           </div>
@@ -438,10 +329,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -462,17 +349,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -525,22 +403,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#字段"><span class="nav-number">1.</span> <span class="nav-text">字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#add-E-e"><span class="nav-number">2.</span> <span class="nav-text">add(E e)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -682,10 +544,6 @@
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 
