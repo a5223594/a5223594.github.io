@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="集合&容器,">
+  <meta name="keywords" content="计算机网络,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="字段int DEFAULT_CAPACITY = 10;Object[] EMPTY_ELEMENTDATA = {};Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};transient 在已经实现序列化的类中，不允许某变量序列化transient Object[] elementData;int size; 序列化将对象转换成以字节序列的形式来表示">
-<meta name="keywords" content="集合&amp;容器">
+<meta name="description" content="粘包怎么出现采用TCP协议进行网络数据传送的软件设计中，普遍存在粘包问题。这主要是由于现代操作系统的网络传输机制所产生的。我们知道，网络通信采用的套接字(socket)技术，其实现实际是由系统内核提供一片连续缓存(流缓冲)来实现应用层程序与网卡接口之间的中转功能。多个数据包被连续存储于连续的缓存中，在对数据包进行读取时由于无法确定发生方的发送边界，而采用某一估测值大小来进行数据读出，若双方的siz">
+<meta name="keywords" content="计算机网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ArrayList">
-<meta property="og:url" content="http://yoursite.com/2019/09/25/ArrayList/index.html">
+<meta property="og:title" content="tcp粘包问题">
+<meta property="og:url" content="http://yoursite.com/2019/10/04/tcp粘包问题/index.html">
 <meta property="og:site_name" content="黄林杰的个人博客">
-<meta property="og:description" content="字段int DEFAULT_CAPACITY = 10;Object[] EMPTY_ELEMENTDATA = {};Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};transient 在已经实现序列化的类中，不允许某变量序列化transient Object[] elementData;int size; 序列化将对象转换成以字节序列的形式来表示">
+<meta property="og:description" content="粘包怎么出现采用TCP协议进行网络数据传送的软件设计中，普遍存在粘包问题。这主要是由于现代操作系统的网络传输机制所产生的。我们知道，网络通信采用的套接字(socket)技术，其实现实际是由系统内核提供一片连续缓存(流缓冲)来实现应用层程序与网卡接口之间的中转功能。多个数据包被连续存储于连续的缓存中，在对数据包进行读取时由于无法确定发生方的发送边界，而采用某一估测值大小来进行数据读出，若双方的siz">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-25T05:42:42.978Z">
+<meta property="og:updated_time" content="2019-10-04T02:13:26.788Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ArrayList">
-<meta name="twitter:description" content="字段int DEFAULT_CAPACITY = 10;Object[] EMPTY_ELEMENTDATA = {};Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};transient 在已经实现序列化的类中，不允许某变量序列化transient Object[] elementData;int size; 序列化将对象转换成以字节序列的形式来表示">
+<meta name="twitter:title" content="tcp粘包问题">
+<meta name="twitter:description" content="粘包怎么出现采用TCP协议进行网络数据传送的软件设计中，普遍存在粘包问题。这主要是由于现代操作系统的网络传输机制所产生的。我们知道，网络通信采用的套接字(socket)技术，其实现实际是由系统内核提供一片连续缓存(流缓冲)来实现应用层程序与网卡接口之间的中转功能。多个数据包被连续存储于连续的缓存中，在对数据包进行读取时由于无法确定发生方的发送边界，而采用某一估测值大小来进行数据读出，若双方的siz">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/09/25/ArrayList/">
+  <link rel="canonical" href="http://yoursite.com/2019/10/04/tcp粘包问题/">
 
 
 
 
 
-  <title>ArrayList | 黄林杰的个人博客</title>
+  <title>tcp粘包问题 | 黄林杰的个人博客</title>
   
 
 
@@ -295,7 +295,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/ArrayList/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/04/tcp粘包问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="黄林杰">
@@ -312,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ArrayList</h1>
+          <h1 class="post-title" itemprop="name headline">tcp粘包问题</h1>
         
 
         <div class="post-meta">
@@ -324,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:42:26+08:00">
-                2019-09-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-04T10:12:16+08:00">
+                2019-10-04
               </time>
             
 
@@ -362,16 +362,23 @@
       
 
       
-        <h2 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h2><p>int DEFAULT_CAPACITY = 10;<br>Object[] EMPTY_ELEMENTDATA = {};<br>Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};<br>transient 在已经实现序列化的类中，不允许某变量序列化<br>transient Object[] elementData;<br>int size;</p>
-<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>将对象转换成以字节序列的形式来表示，以便用于持久化和传输。用的时候拿出来进行反序列化即可又变成Java对象。<br>实现方法：实现Serializable接口。<br>ArrayList只序列化size大小的元素，不是整个数组<br>原因在于elementData是一个缓存数组，它通常会预留一些容量，等容量不足时再扩充容量，那么有些空间可能就没有实际存储元素，采用上诉的方式来实现序列化时，就可以保证只序列化实际存储的那些元素，而不是整个数组，从而节省空间和时间。</p>
-<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>根据initialCapacity 初始化一个空数组，如果值为0，则初始化一个空数组</p>
-<h2 id="添加元素时会判断容量并扩容"><a href="#添加元素时会判断容量并扩容" class="headerlink" title="添加元素时会判断容量并扩容"></a>添加元素时会判断容量并扩容</h2><p>参数为size+1，保证最小容量能添加元素<br>elementData[size++] = e;在数组末尾添加元素</p>
-<h2 id="ensureCapacityInternal-int-minCapacity"><a href="#ensureCapacityInternal-int-minCapacity" class="headerlink" title="ensureCapacityInternal(int minCapacity)"></a>ensureCapacityInternal(int minCapacity)</h2><p>ensureExplicitCapacity(calculateCapacity(elementData, minCapacity));<br>计算容量+确保容量<br>如果是空数组，返回默认容量10和size+1的最大值，如果不是，返回size+1</p>
-<h2 id="默认1-5倍扩容"><a href="#默认1-5倍扩容" class="headerlink" title="默认1.5倍扩容"></a>默认1.5倍扩容</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private void grow(int minCapacity) &#123;</span><br><span class="line">    // overflow-conscious code</span><br><span class="line">    int oldCapacity = elementData.length;</span><br><span class="line">    int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1); //1.5</span><br><span class="line">    if (newCapacity - minCapacity &lt; 0)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    if (newCapacity - MAX_ARRAY_SIZE &gt; 0)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    // minCapacity is usually close to size, so this is a win:</span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="指定位置添加add-int-index-E-element"><a href="#指定位置添加add-int-index-E-element" class="headerlink" title="指定位置添加add(int index, E element)"></a>指定位置添加add(int index, E element)</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public void add(int index, E element) &#123;</span><br><span class="line">    rangeCheckForAdd(index);</span><br><span class="line"></span><br><span class="line">    ensureCapacityInternal(size + 1);  // Increments modCount!!</span><br><span class="line">    System.arraycopy(elementData, index, elementData, index + 1,</span><br><span class="line">                     size - index); //第i个位置后的往后移一位，这个方法是移动多少个元素，也就是size-index个元素都要往后移</span><br><span class="line">    elementData[index] = element;</span><br><span class="line">    size++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="删除修改同理"><a href="#删除修改同理" class="headerlink" title="删除修改同理"></a>删除修改同理</h2><p>都要移动元素，所以删除添加性能比链表差。</p>
-<h2 id="线程不安全"><a href="#线程不安全" class="headerlink" title="线程不安全"></a>线程不安全</h2><p>不推荐用vector，读写都加synchronized，性能差<br>推荐CopyOnWriteArrayList，写时复制，读不加锁</p>
-<h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><p>因为其底层是数组，所以修改和查询效率高。<br>可自动扩容(1.5倍)。<br>插入和删除效率不高。<br>线程不安全。</p>
+        <h2 id="粘包怎么出现"><a href="#粘包怎么出现" class="headerlink" title="粘包怎么出现"></a>粘包怎么出现</h2><p><strong>采用TCP协议进行网络数据传送的软件设计中，普遍存在粘包问题。</strong>这主要是由于现代操作系统的网络传输机制所产生的。我们知道，网络通信采用的套接字(socket)技术，其实现实际是由系统内核提供一片连续缓存(流缓冲)来实现应用层程序与网卡接口之间的中转功能。<strong>多个数据包被连续存储于连续的缓存中，在对数据包进行读取时由于无法确定发生方的发送边界，而采用某一估测值大小来进行数据读出，若双方的size不一致时就会使数据包的边界发生错位，导致读出错误的数据分包，进而曲解原始数据含义。</strong></p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="定长发送"><a href="#定长发送" class="headerlink" title="定长发送"></a>定长发送</h3><p>在进行数据发送时采用固定长度的设计，也就是<strong>无论多大数据发送都分包为固定长度</strong>（为便于描述，此处定长为记为LEN），也就是<strong>发送端在发送数据时都以LEN为长度进行分包。这样接收方都以固定的LEN进行接收</strong>，如此一来发送和接收就能一一对应了。<strong>分包的时候不一定能完整的恰好分成多个完整的LEN的包</strong>，最后一个包一般都会小于LEN，这时候最后一个包可以在<strong>不足的部分填充空白字节</strong>。</p>
+<h4 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h4><ol>
+<li><strong>最后一个包的不足长度被填充为空白部分，也即无效字节序。</strong>那么接收方可能难以辨别这无效的部分，它本身就是为了补位的，并无实际含义。这就为<strong>接收端处理其含义带来了麻烦</strong>。当然也有解决办法，<strong>可以通过增添标志位的方法来弥补，即在每一个数据包的最前面增加一个定长的报头，然后将该数据包的末尾标记一并发送。接收方根据这个标记确认无效字节序列</strong>，从而实现数据的完整接收。</li>
+<li><strong>在发送包长度随机分布的情况下，会造成带宽浪费。</strong>比如发送长度可能为<br>1,100,1000,4000字节等等，则都需要按照定长最大值即4000来发送，<strong>数据包小于4000字节的其他包也会被填充至4000，造成网络负载的无效浪费。</strong></li>
+</ol>
+<h3 id="尾部标记序列"><a href="#尾部标记序列" class="headerlink" title="尾部标记序列"></a>尾部标记序列</h3><p>在每个要发送的<strong>数据包的尾部设置一个特殊的字节序列</strong>，此序列带有特殊含义，跟字符串的结束符标识”\0”一样的含义，用来标示这个数据包的末尾，接收方可对接收的数据进行分析，通过尾部序列确认数据包的边界。</p>
+<h4 id="缺陷-1"><a href="#缺陷-1" class="headerlink" title="缺陷"></a>缺陷</h4><ol>
+<li>接收方需要对数据进行分析，甄别尾部序列。</li>
+<li>尾部序列的确定本身是一个问题。什么样的序列可以像”\0”一样来做一个结束符呢？这个序列必须是不具备通常任何人类或者程序可识别的带含义的数据序列，就像“\0”是一个无效字符串内容，因而可以作为字符串的结束标记。</li>
+</ol>
+<h3 id="头部标记分步接收"><a href="#头部标记分步接收" class="headerlink" title="头部标记分步接收"></a>头部标记分步接收</h3><p>既不损失效率，还完美解决了任何大小的数据包的边界问题。</p>
+<p>定义一个用户报头，在报头中注明每次发送的数据包大小。接收方每次接收时先以报头的size进行数据读取，这必然只能读到一个报头的数据，从报头中得到该数据包的数据大小，然后再按照此大小进行再次读取，就能读到数据的内容了。这样一来，<strong>每个数据包发送时都封装一个报头，然后接收方分两次接收一个包，第一次接收报头，根据报头大小第二次才接收数据内容。</strong></p>
+<h4 id="缺陷-2"><a href="#缺陷-2" class="headerlink" title="缺陷"></a>缺陷</h4><ol>
+<li>报头虽小，但每个包都需要多封装sizeof(_data_head)的数据，积累效应也不可完全忽略。</li>
+<li>接收方的接收动作分成了两次，也就是进行<strong>数据读取的操作被增加了一倍</strong>，而数据读取操作的recv或者read都是系统调用，这<strong>对内核而言的开销是一个不能完全忽略的影响</strong>，对程序而言性能影响可忽略（系统调用的速度非常快）。</li>
+</ol>
 
       
     </div>
@@ -389,7 +396,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/集合-容器/" rel="tag"># 集合&容器</a>
+            <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
           
         </div>
       
@@ -402,8 +409,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/25/HashMap/" rel="next" title="HashMap">
-                <i class="fa fa-chevron-left"></i> HashMap
+              <a href="/2019/10/04/NIO/" rel="next" title="NIO">
+                <i class="fa fa-chevron-left"></i> NIO
               </a>
             
           </div>
@@ -412,8 +419,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/09/25/LinkedList/" rel="prev" title="LinkedList">
-                LinkedList <i class="fa fa-chevron-right"></i>
+              <a href="/2019/10/04/水平触发和边沿触发/" rel="prev" title="水平触发和边沿触发">
+                水平触发和边沿触发 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -539,7 +546,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#字段"><span class="nav-number">1.</span> <span class="nav-text">字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化"><span class="nav-number">2.</span> <span class="nav-text">序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化"><span class="nav-number">3.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加元素时会判断容量并扩容"><span class="nav-number">4.</span> <span class="nav-text">添加元素时会判断容量并扩容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ensureCapacityInternal-int-minCapacity"><span class="nav-number">5.</span> <span class="nav-text">ensureCapacityInternal(int minCapacity)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#默认1-5倍扩容"><span class="nav-number">6.</span> <span class="nav-text">默认1.5倍扩容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指定位置添加add-int-index-E-element"><span class="nav-number">7.</span> <span class="nav-text">指定位置添加add(int index, E element)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除修改同理"><span class="nav-number">8.</span> <span class="nav-text">删除修改同理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线程不安全"><span class="nav-number">9.</span> <span class="nav-text">线程不安全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优缺点"><span class="nav-number">10.</span> <span class="nav-text">优缺点</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#粘包怎么出现"><span class="nav-number">1.</span> <span class="nav-text">粘包怎么出现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方案"><span class="nav-number">2.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定长发送"><span class="nav-number">2.1.</span> <span class="nav-text">定长发送</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺陷"><span class="nav-number">2.1.1.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#尾部标记序列"><span class="nav-number">2.2.</span> <span class="nav-text">尾部标记序列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺陷-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">缺陷</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#头部标记分步接收"><span class="nav-number">2.3.</span> <span class="nav-text">头部标记分步接收</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缺陷-2"><span class="nav-number">2.3.1.</span> <span class="nav-text">缺陷</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

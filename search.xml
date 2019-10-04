@@ -4,6 +4,44 @@
   
     
     <entry>
+      <title>水平触发和边沿触发</title>
+      <link href="/2019/10/04/%E6%B0%B4%E5%B9%B3%E8%A7%A6%E5%8F%91%E5%92%8C%E8%BE%B9%E6%B2%BF%E8%A7%A6%E5%8F%91/"/>
+      <url>/2019/10/04/%E6%B0%B4%E5%B9%B3%E8%A7%A6%E5%8F%91%E5%92%8C%E8%BE%B9%E6%B2%BF%E8%A7%A6%E5%8F%91/</url>
+      
+        <content type="html"><![CDATA[<h2 id="ET-vs-LT-概念"><a href="#ET-vs-LT-概念" class="headerlink" title="ET vs LT - 概念"></a><strong>ET vs LT - 概念</strong></h2><ul><li>Edge Triggered (ET) 边沿触发</li></ul><ol><li>socket的接收缓冲区状态变化时触发读事件，即<strong>空的接收缓冲区刚接收到数据时触发读事件</strong></li><li>socket的发送缓冲区状态变化时触发写事件，即<strong>满的缓冲区刚空出空间时触发读事件</strong></li></ol><p>仅在缓冲区状态变化时触发事件，比如<strong>数据缓冲区从无到有</strong>的时候(不可读-可读)</p><ul><li>Level Triggered (LT) 水平触发</li></ul><ol><li>socket<strong>接收缓冲区不为空，有数据可读，则读事件一直触发</strong></li><li>socket<strong>发送缓冲区不满可以继续写入数据，则写事件一直触发</strong></li></ol><p>符合思维习惯，epoll_wait返回的事件就是socket的状态</p><p><strong>挂在ready_list上的sk什么时候会被移除掉呢？</strong></p><p>对于Edge Triggered (ET) 边沿触发：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">5</span>] 遍历epoll的ready_list，将sk从ready_list中移除，然后调用该sk的poll逻辑收集发生的事件</span><br></pre></td></tr></table></figure><p>对于Level Triggered (LT) 水平触发：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">5.1</span>] 遍历epoll的ready_list，将sk从ready_list中移除，然后调用该sk的poll逻辑收集发生的事件</span><br><span class="line">[<span class="number">5.2</span>] 如果该sk的poll函数返回了关心的事件(对于可读事件来说，就是POLL_IN事件)，那么该sk被重新加入到epoll的ready_list中。</span><br></pre></td></tr></table></figure><p>对于可读事件而言，在ET模式下，如果某个socket有新的数据到达，那么该sk就会被排入epoll的ready_list，从而epoll_wait就一定能收到可读事件的通知(调用sk的poll逻辑一定能收集到可读事件)。于是，我们通常理解的缓冲区状态变化(从无到有)的理解是不准确的，准确的理解应该是是否有新的数据达到缓冲区。</p><p>而在LT模式下，某个sk被探测到有数据可读，那么该sk会被重新加入到ready_list，那么在该sk的数据被全部取走前，下次调用epoll_wait就一定能够收到该sk的可读事件(调用sk的poll逻辑一定能收集到可读事件)，从而epoll_wait就能返回。</p><h2 id="ET-vs-LT-性能"><a href="#ET-vs-LT-性能" class="headerlink" title="ET vs LT - 性能"></a><strong>ET vs LT - 性能</strong></h2><p>对于可读事件而言，LT比ET多了两个操作：(1)对ready_list的遍历的时候，对于收集到可读事件的sk会<strong>重新放入ready_list</strong>；(2)下次epoll_wait的时候会<strong>再次遍历上次重新放入</strong>的sk，如果sk本身没有数据可读了，那么这次遍历就变得多余了。</p><p>在服务端有海量活跃socket的时候，LT模式下，epoll_wait返回的时候，会有海量的socket<br>sk重新放入ready_list。如果，用户在第一次epoll_wait返回的时候，将有数据的socket都处理掉了，那么下次epoll_wait的时候，上次epoll_wait重新入ready_list的sk被再次遍历就有点多余，这个时候LT确实会带来一些性能损失。</p><p>先不说第一次epoll_wait返回的时候，用户进程能否都将有数据返回的socket处理掉。在用户处理的过程中，如果该socket有新的数据上来，那么协议栈发现sk已经在ready_list中了，那么就不需要再次放入ready_list，也就是在LT模式下，对该sk的再次遍历不是多余的，是有效的。同时，我们回归epoll高效的场景在于，服务器有海量socket，但是活跃socket较少的情况下才会体现出epoll的高效、高性能。因此，在实际的应用场合，绝大多数情况下，ET模式在性能上并不会比LT模式具有压倒性的优势，至少，<strong>目前还没有实际应用场合的测试表明ET比LT性能更好。</strong></p><h2 id="ET-vs-LT-复杂度"><a href="#ET-vs-LT-复杂度" class="headerlink" title="ET vs LT - 复杂度"></a><strong>ET vs LT - 复杂度</strong></h2><p>我们知道，对于可读事件而言，在阻塞模式下，是无法识别队列空的事件的，并且，<strong>事件通知机制，仅仅是通知有数据，并不会通知有多少数据。</strong>于是，在阻塞模式下，在epoll_wait返回的时候，我们对某个socket_fd调用recv或read读取并返回了一些数据的时候，我们不能再次直接调用recv或read，因为，如果socket_fd已经无数据可读的时候，进程就会阻塞在该socket_fd的recv或read调用上，这样就影响了IO多路复用的逻辑(<strong>我们希望是阻塞在所有被监控socket的epoll_wait调用上，而不是单独某个socket_fd上</strong>)，<strong>造成其他socket饿死，即使有数据来了，也无法处理。</strong></p><p>接下来，我们只能再次调用epoll_wait来探测一些socket_fd，看是否还有数据可读。<strong>在LT模式下，如果socket_fd还有数据可读，那么epoll_wait就一定能够返回，接着，我们就可以对该socket_fd调用recv或read读取数据。</strong>然而，<strong>在ET模式下，尽管socket_fd还是数据可读，但是如果没有新的数据上来，那么epoll_wait是不会通知可读事件的。</strong>这个时候，epoll_wait阻塞住了，这下子坑爹了，明明有数据你不处理，非要等新的数据来了在处理，那么我们就死扛咯，看谁先忍不住。</p><p>等等，在阻塞模式下，不是不能用ET的么？是的，正是因为有这样的缺点，<strong>ET强制需要在非阻塞模式下使用</strong>。<strong>在ET模式下，epoll_wait返回socket_fd有数据可读，我们必须要读完所有数据才能离开。因为，如果不读完，epoll不会在通知你了，虽然有新的数据到来的时候，会再次通知，但是我们并不知道新数据会不会来，以及什么时候会来。</strong>由于在阻塞模式下，我们是无法通过recv/read来探测空数据事件，于是，我们必须采用非阻塞模式，一直read直到EAGAIN。因此，ET要求socket_fd非阻塞也就不难理解了。</p><p>另外，epoll_wait原本的语意是：<strong>监控并探测socket是否有数据可读</strong>(对于读事件而言)。<strong>LT模式</strong>保留了其原本的语意，<strong>只要socket还有数据可读，它就能不断反馈</strong>，于是，我们想什么时候读取处理都可以，我们永远有再次poll的机会去探测是否有数据可以处理，这样带来了编程上的很大方便，不容易死锁造成某些socket饿死。相反，<strong>ET模式修改了epoll_wait原本的语意，变成了：监控并探测socket是否有新的数据可读。</strong></p><p>于是，<strong>在epoll_wait返回socket_fd可读的时候，我们需要小心处理，要不然会造成死锁和socket饿死现象。</strong>典型如listen_fd返回可读的时候，我们需要不断的accept直到EAGAIN。假设同时有三个请求到达，epoll_wait返回listen_fd可读，这个时候，如果仅仅accept一次拿走一个请求去处理，那么就会留下两个请求，如果这个时候一直没有新的请求到达，那么再次调用epoll_wait是不会通知listen_fd可读的，于是epoll_wait只能睡眠到超时才返回，遗留下来的两个请求一直得不到处理，处于饿死状态。</p><h2 id="ET-vs-LT-总结"><a href="#ET-vs-LT-总结" class="headerlink" title="ET vs LT - 总结"></a><strong>ET vs LT - 总结</strong></h2><ul><li>ET - 对于读操作</li></ul><p>[1] 当接收缓冲buffer内待读数据增加的时候时候(由空变为不空的时候、或者有新的数据进入缓冲buffer)</p><p>[2] 调用epoll_ctl(EPOLL_CTL_MOD)来改变socket_fd的监控事件，也就是重新mod socket_fd的EPOLLIN事件，并且接收缓冲buffer内还有数据没读取。(这里不能是EPOLL_CTL_ADD的原因是，epoll不允许重复ADD的，除非先DEL了，再ADD) 因为epoll_ctl(ADD或MOD)会调用sk的poll逻辑来检查是否有关心的事件，如果有，就会将该sk加入到epoll的ready_list中，下次调用epoll_wait的时候，就会遍历到该sk，然后会重新收集到关心的事件返回。</p><ul><li>ET - 对于写操作</li></ul><p>[1] 发送缓冲buffer内待发送的数据减少的时候(由满状态变为不满状态的时候、或者有部分数据被发出去的时候) [2] 调用epoll_ctl(EPOLL_CTL_MOD)来改变socket_fd的监控事件，也就是重新mod socket_fd的EPOLLOUT事件，并且发送缓冲buffer还没满的时候。</p><ul><li>LT - 对于读操作 LT就简单多了，唯一的条件就是，接收缓冲buffer内有可读数据的时候</li><li>LT - 对于写操作 LT就简单多了，唯一的条件就是，发送缓冲buffer还没满的时候</li></ul><p>在绝大多少情况下，ET模式并不会比LT模式更为高效，同时，ET模式带来了不好理解的语意，这样容易造成编程上面的复杂逻辑和坑点。因此，建议还是采用LT模式来编程更为舒爽。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> epoll </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>tcp粘包问题</title>
+      <link href="/2019/10/04/tcp%E7%B2%98%E5%8C%85%E9%97%AE%E9%A2%98/"/>
+      <url>/2019/10/04/tcp%E7%B2%98%E5%8C%85%E9%97%AE%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<h2 id="粘包怎么出现"><a href="#粘包怎么出现" class="headerlink" title="粘包怎么出现"></a>粘包怎么出现</h2><p><strong>采用TCP协议进行网络数据传送的软件设计中，普遍存在粘包问题。</strong>这主要是由于现代操作系统的网络传输机制所产生的。我们知道，网络通信采用的套接字(socket)技术，其实现实际是由系统内核提供一片连续缓存(流缓冲)来实现应用层程序与网卡接口之间的中转功能。<strong>多个数据包被连续存储于连续的缓存中，在对数据包进行读取时由于无法确定发生方的发送边界，而采用某一估测值大小来进行数据读出，若双方的size不一致时就会使数据包的边界发生错位，导致读出错误的数据分包，进而曲解原始数据含义。</strong></p><h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="定长发送"><a href="#定长发送" class="headerlink" title="定长发送"></a>定长发送</h3><p>在进行数据发送时采用固定长度的设计，也就是<strong>无论多大数据发送都分包为固定长度</strong>（为便于描述，此处定长为记为LEN），也就是<strong>发送端在发送数据时都以LEN为长度进行分包。这样接收方都以固定的LEN进行接收</strong>，如此一来发送和接收就能一一对应了。<strong>分包的时候不一定能完整的恰好分成多个完整的LEN的包</strong>，最后一个包一般都会小于LEN，这时候最后一个包可以在<strong>不足的部分填充空白字节</strong>。</p><h4 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h4><ol><li><strong>最后一个包的不足长度被填充为空白部分，也即无效字节序。</strong>那么接收方可能难以辨别这无效的部分，它本身就是为了补位的，并无实际含义。这就为<strong>接收端处理其含义带来了麻烦</strong>。当然也有解决办法，<strong>可以通过增添标志位的方法来弥补，即在每一个数据包的最前面增加一个定长的报头，然后将该数据包的末尾标记一并发送。接收方根据这个标记确认无效字节序列</strong>，从而实现数据的完整接收。</li><li><strong>在发送包长度随机分布的情况下，会造成带宽浪费。</strong>比如发送长度可能为<br>1,100,1000,4000字节等等，则都需要按照定长最大值即4000来发送，<strong>数据包小于4000字节的其他包也会被填充至4000，造成网络负载的无效浪费。</strong></li></ol><h3 id="尾部标记序列"><a href="#尾部标记序列" class="headerlink" title="尾部标记序列"></a>尾部标记序列</h3><p>在每个要发送的<strong>数据包的尾部设置一个特殊的字节序列</strong>，此序列带有特殊含义，跟字符串的结束符标识”\0”一样的含义，用来标示这个数据包的末尾，接收方可对接收的数据进行分析，通过尾部序列确认数据包的边界。</p><h4 id="缺陷-1"><a href="#缺陷-1" class="headerlink" title="缺陷"></a>缺陷</h4><ol><li>接收方需要对数据进行分析，甄别尾部序列。</li><li>尾部序列的确定本身是一个问题。什么样的序列可以像”\0”一样来做一个结束符呢？这个序列必须是不具备通常任何人类或者程序可识别的带含义的数据序列，就像“\0”是一个无效字符串内容，因而可以作为字符串的结束标记。</li></ol><h3 id="头部标记分步接收"><a href="#头部标记分步接收" class="headerlink" title="头部标记分步接收"></a>头部标记分步接收</h3><p>既不损失效率，还完美解决了任何大小的数据包的边界问题。</p><p>定义一个用户报头，在报头中注明每次发送的数据包大小。接收方每次接收时先以报头的size进行数据读取，这必然只能读到一个报头的数据，从报头中得到该数据包的数据大小，然后再按照此大小进行再次读取，就能读到数据的内容了。这样一来，<strong>每个数据包发送时都封装一个报头，然后接收方分两次接收一个包，第一次接收报头，根据报头大小第二次才接收数据内容。</strong></p><h4 id="缺陷-2"><a href="#缺陷-2" class="headerlink" title="缺陷"></a>缺陷</h4><ol><li>报头虽小，但每个包都需要多封装sizeof(_data_head)的数据，积累效应也不可完全忽略。</li><li>接收方的接收动作分成了两次，也就是进行<strong>数据读取的操作被增加了一倍</strong>，而数据读取操作的recv或者read都是系统调用，这<strong>对内核而言的开销是一个不能完全忽略的影响</strong>，对程序而言性能影响可忽略（系统调用的速度非常快）。</li></ol>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 计算机网络 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>NIO</title>
       <link href="/2019/10/04/NIO/"/>
       <url>/2019/10/04/NIO/</url>
