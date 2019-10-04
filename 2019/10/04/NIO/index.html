@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="linux,基础,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="select 和 epoll底层实现原理内核接受网卡流量的整个流程 网络编程的核心对象是socket，当创建socket时在底层会创建一个由文件系统管理的socket对象。这个对象包括了发送缓冲区，接收缓冲区，等待队列。 recv函数用于从某一个socket中接受流量，但是这个函数在被调用入进程会一直处于阻塞状态，直到从该socket收到数据为止。  网卡接收流量的流程：  步骤一：进程中调用了r">
+<meta name="keywords" content="linux,基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NIO">
+<meta property="og:url" content="http://yoursite.com/2019/10/04/NIO/index.html">
+<meta property="og:site_name" content="黄林杰的个人博客">
+<meta property="og:description" content="select 和 epoll底层实现原理内核接受网卡流量的整个流程 网络编程的核心对象是socket，当创建socket时在底层会创建一个由文件系统管理的socket对象。这个对象包括了发送缓冲区，接收缓冲区，等待队列。 recv函数用于从某一个socket中接受流量，但是这个函数在被调用入进程会一直处于阻塞状态，直到从该socket收到数据为止。  网卡接收流量的流程：  步骤一：进程中调用了r">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-10-04T01:53:39.063Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NIO">
+<meta name="twitter:description" content="select 和 epoll底层实现原理内核接受网卡流量的整个流程 网络编程的核心对象是socket，当创建socket时在底层会创建一个由文件系统管理的socket对象。这个对象包括了发送缓冲区，接收缓冲区，等待队列。 recv函数用于从某一个socket中接受流量，但是这个函数在被调用入进程会一直处于阻塞状态，直到从该socket收到数据为止。  网卡接收流量的流程：  步骤一：进程中调用了r">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/04/NIO/">
+
+
+
+
+
+  <title>NIO | 黄林杰的个人博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">黄林杰的个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/04/NIO/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="黄林杰">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/myavatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="黄林杰的个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NIO</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-04T09:52:27+08:00">
+                2019-10-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="select-和-epoll底层实现原理"><a href="#select-和-epoll底层实现原理" class="headerlink" title="select 和 epoll底层实现原理"></a>select 和 epoll底层实现原理</h2><h3 id="内核接受网卡流量的整个流程"><a href="#内核接受网卡流量的整个流程" class="headerlink" title="内核接受网卡流量的整个流程"></a>内核接受网卡流量的整个流程</h3><ul>
+<li>网络编程的核心对象是socket，当创建socket时在底层会创建一个由文件系统管理的socket对象。这个对象包括了发送缓冲区，接收缓冲区，<strong>等待队列</strong>。</li>
+<li>recv函数用于从<strong>某一个socket</strong>中接受流量，但是<strong>这个函数在被调用入进程会一直处于阻塞状态，直到从该socket收到数据为止。</strong></li>
+</ul>
+<p>网卡接收流量的流程：</p>
+<ul>
+<li>步骤一：进程中调用了recv函数请求接收指定socket的流量。</li>
+<li>步骤二：<strong>操作系统将这个进程加入到对应socket的等待队列中，</strong>并从CPU工作队列中移除，经过这一步后，<strong>进程会处于阻塞状态。</strong></li>
+<li>计算机接收到对端传输的数据，网卡把数据写入到内存中。这一步不需要CPU参与（数据不经过CPU直接从IO设备写入内存的技术叫作DMA技术）</li>
+<li>数据写完后网卡会发送一个中断信号，中断CPU，通知CPU有数据到达。</li>
+<li>CPU中断程序响应中断，并把内存中的数据写入了对应socket的缓冲区里</li>
+<li>CPU唤醒进程，把进程从socket的等待队列中移除，然后加入到工作队列等待系统调用。</li>
+</ul>
+<p>上面的流程有一个问题：<br> <strong>revc函数只能监控一个socket，并且会导致进程一直阻塞在这个socket中，直到socket中有数据返回为止。如果有多个socket监控，则需要创建多个进程，非常浪费资源。</strong></p>
+<p>而select和epoll就解决了上面的问题，它们让<strong>一个进程可以监控多个socket</strong>，下面分别说一下两个函数的实现细节。</p>
+<h2 id="select的实现细节"><a href="#select的实现细节" class="headerlink" title="select的实现细节"></a>select的实现细节</h2><p>select一次监控多个socket的原理很简单：</p>
+<ul>
+<li><strong>它会把进程加入到它需要监控的所有socket的等待队列中，然后将进程从CPU 工作队列中移除，进入阻塞状态。</strong></li>
+<li><strong>当这些socket中有一个socket有数据返回时，中断程序会把进程从socket等待队列中移除，并把进程重新加入到CPU工作队列中，让进程进就绪状态。</strong></li>
+<li>进程进入被CPU调用到，只需要<strong>遍历所有socket的状态</strong>，就可以知道哪些socket可以读取数据了。</li>
+<li>操作完这些可读取数据的socket之后，又会重复第一步，把进程加入到所有的 socket中，然后让进程进入阻塞状态。</li>
+</ul>
+<p>select函数实现了在一个进程中监控多个socket的方法。但是这函数的性能并不高，因为它需要重复把进程从所有的socket中加入/移除。因此它监控的socket数量不能太多，底层规定<strong>不能超过1024个。</strong></p>
+<h2 id="epoll函数的实现细节"><a href="#epoll函数的实现细节" class="headerlink" title="epoll函数的实现细节"></a>epoll函数的实现细节</h2><p>当进程调用epoll监控多个socket时，会在底层创建一个eventpoll对象，这个对象中包含一个重要的队列：<strong>就绪队列</strong></p>
+<ul>
+<li>进程调用epoll函数后，epoll会把这个进程加入<strong>eventpoll对象</strong>的等待队列中</li>
+<li>然后把eventpoll对象加入到所有socket的等待队列中，并让CPU阻塞住</li>
+<li>当某一个socket有数据返回时，CPU中断程序会把这个socket加入到eventpoll对象的就绪队列中，并把eventpoll中等待的进程唤醒。</li>
+<li>进程被唤醒后直接从就绪队列中获取socket读取数据</li>
+<li>数据读取完成后，epoll又会把进程加入到eventpoll的等待队列中，然后让CPU阻塞住。</li>
+</ul>
+<p>epoll针对select优化的点：</p>
+<ul>
+<li>除了第一次外，epoll不需操作所有socket对象的等待队列，只需要操作eventpoll的等待队列即可</li>
+<li>进程被唤醒后，不需要遍历即可直接知道哪些socket准备好了。</li>
+</ul>
+<h2 id="Linux的socket-事件wakeup-callback机制"><a href="#Linux的socket-事件wakeup-callback机制" class="headerlink" title="Linux的socket 事件wakeup callback机制"></a>Linux的socket 事件wakeup callback机制</h2><p>在介绍select、poll、epoll前，有必要说说linux(2.6+)内核的事件wakeup callback机制，这是IO多路复用机制存在的本质。<strong>Linux通过socket睡眠队列来管理所有等待socket的某个事件的process，同时通过wakeup机制来异步唤醒整个睡眠队列上等待事件的process，通知process相关事件发生。</strong>通常情况，<strong>socket的事件发生的时候，其会顺序遍历socket睡眠队列上的每个process节点，调用每个process节点挂载的callback函数。</strong>在遍历的过程中，如果遇到某个节点是排他的，那么就终止遍历，总体上会涉及两大逻辑：（1）睡眠等待逻辑；（2）唤醒逻辑。</p>
+<ul>
+<li>睡眠等待逻辑：涉及select、poll、epoll_wait的阻塞等待逻辑</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>]select、poll、epoll_wait陷入内核，判断监控的socket是否有关心的事件发生了，如果没，则为当前process构建一个wait_entry节点，然后插入到监控socket的sleep_list</span><br><span class="line">[<span class="number">2</span>]进入循环的schedule直到关心的事件发生了</span><br><span class="line">[<span class="number">3</span>]关心的事件发生后，将当前process的wait_entry节点从socket的sleep_list中删除</span><br></pre></td></tr></table></figure>
+<ul>
+<li>唤醒逻辑</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>]socket的事件发生了，然后socket顺序遍历其睡眠队列，依次调用每个wait_entry节点的callback函数</span><br><span class="line">[<span class="number">2</span>]直到完成队列的遍历或遇到某个wait_entry节点是排他的才停止。</span><br><span class="line">[<span class="number">3</span>]一般情况下callback包含两个逻辑：<span class="number">1.</span>wait_entry自定义的私有逻辑；<span class="number">2.</span>唤醒的公共逻辑，主要用于将该wait_entry的process放入CPU的就绪队列，让CPU随后可以调度其执行。</span><br></pre></td></tr></table></figure>
+<p>下面就上面的两大逻辑，分别阐述select、poll、epoll的异同，为什么epoll能够比select、poll高效。</p>
+<h2 id="Select—1024"><a href="#Select—1024" class="headerlink" title="Select—1024"></a>Select—1024</h2><p>在一个高性能的网络服务上，大多情况下一个服务进程(线程)process需要同时处理多个socket，我们需要公平对待所有socket，对于read而言，那个socket有数据可读，process就去读取该socket的数据来处理。于是对于read，一个朴素的需求就是<strong>关心的N个socket是否有数据”可读”</strong>，也就是我们期待”可读”事件的通知，而不是盲目地对每个socket调用recv/recvfrom来尝试接收数据。我们<strong>应该block在等待事件的发生上，这个事件简单点就是”关心的N个socket中一个或多个socket有数据可读了”，当block解除的时候，就意味着，我们一定可以找到一个或多个socket上有可读的数据。</strong>另一方面，根据上面的socket wakeup callback机制，我们不知道什么时候，哪个socket会有读事件发生，于是，<strong>process需要同时插入到这N个socket的sleep_list上等待任意一个socket可读事件发生而被唤醒，当时process被唤醒的时候，其callback里面应该有个逻辑去检查具体那些socket可读了。</strong></p>
+<p>于是，select的多路复用逻辑就清晰了，select为每个socket引入一个poll逻辑，该poll逻辑用于收集socket发生的事件，对于可读事件来说，简单伪码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">poll()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//其他逻辑</span></span><br><span class="line">    <span class="keyword">if</span> (recieve queque is not empty)</span><br><span class="line">    &#123;</span><br><span class="line">        sk_event |= POLL_IN；</span><br><span class="line">    &#125;</span><br><span class="line">   <span class="comment">//其他逻辑</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来就到select的逻辑了，下面是select的函数原型：5个参数，后面4个参数都是in/out类型(值可能会被修改返回)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);</span><br></pre></td></tr></table></figure>
+<p>当用户process调用select的时候，select会将需要监控的readfds集合拷贝到内核空间（假设监控的仅仅是socket可读），然后<strong>遍历自己监控的socket sk，挨个调用sk的poll逻辑以便检查该sk是否有可读事件</strong>，遍历完所有的sk后，<strong>如果没有任何一个sk可读，那么select会调用schedule_timeout进入schedule循环，使得process进入睡眠。</strong>如果在timeout时间内某个sk上有数据可读了，或者等待timeout了，则调用select的process会被唤醒，接下来select就是遍历监控的sk集合，挨个收集可读事件并返回给用户了，相应的伪码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (sk <span class="keyword">in</span> readfds)</span><br><span class="line">&#123;</span><br><span class="line">    sk_event.evt = sk.poll();</span><br><span class="line">    sk_event.sk = sk;</span><br><span class="line">    ret_event_for_process;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过上面的select逻辑过程分析，相信大家都意识到，select存在两个问题</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>] 被监控的fds需要从用户空间拷贝到内核空间</span><br><span class="line">    为了减少数据拷贝带来的性能损坏，内核对被监控的fds集合大小做了限制，并且这个是通过宏控制的，大小不可改变(限制为<span class="number">1024</span>)。</span><br><span class="line">[<span class="number">2</span>] 被监控的fds集合中，只要有一个有数据可读，整个socket集合就会被遍历一次调用sk的poll函数收集可读事件</span><br><span class="line">    由于当初的需求是朴素，仅仅关心是否有数据可读这样一个事件，当事件通知来的时候，由于数据的到来是异步的，我们不知道事件来的时候，有多少个被监控的socket有数据可读了，于是，只能挨个遍历每个socket来收集可读事件。</span><br></pre></td></tr></table></figure>
+<p>到这里，我们有三个问题需要解决：</p>
+<p>（1）被监控的fds集合限制为1024，1024太小了，我们希望能够有个比较大的可监控fds集合 </p>
+<p>（2）fds集合需要从用户空间拷贝到内核空间的问题，我们希望不需要拷贝 </p>
+<p>（3）当被监控的fds中某些有数据可读的时候，我们希望通知更加精细一点，就是我们希望能够从通知中得到有可读事件的fds列表，而不是需要遍历整个fds来收集。</p>
+<blockquote>
+<p>我的理解：进程要监听多个socket，调用select方法，会用自己构建出wait_entry并且排队到socket的等待队列中，最多能监听1024个，并且遍历后阻塞，当socket有事件产生，会唤醒响应等待队列中的wait_entry，也就是进程，进程会被回调遍历监听的所有socket，也可以说是所有文件描述符。并返回数据。</p>
+</blockquote>
+<h2 id="poll—鸡肋"><a href="#poll—鸡肋" class="headerlink" title="poll—鸡肋"></a>poll—鸡肋</h2><p>select遗留的三个问题中，问题(1)是用法限制问题，问题(2)和(3)则是性能问题。poll和select非常相似，poll并没着手解决性能问题，<strong>poll只是解决了select的问题(1)fds集合大小1024限制问题。</strong>下面是poll的函数原型，poll改变了fds集合的描述方式，使用了pollfd结构而不是select的fd_set结构，使得poll支持的fds集合限制远大于select的1024。poll虽然解决了fds集合大小1024的限制问题，但是，它并没改变大量描述符数组被整体复制于用户态和内核态的地址空间之间，以及个别描述符就绪触发整体描述符集合的遍历的低效问题。poll随着监控的socket集合的增加性能线性下降，poll不适合用于大并发场景。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int poll(struct pollfd *fds, nfds_t nfds, int timeout);</span><br></pre></td></tr></table></figure>
+<h2 id="epoll—终极"><a href="#epoll—终极" class="headerlink" title="epoll—终极"></a>epoll—终极</h2><h3 id="fds集合拷贝问题的解决"><a href="#fds集合拷贝问题的解决" class="headerlink" title="fds集合拷贝问题的解决"></a>fds集合拷贝问题的解决</h3><p>对于IO多路复用，有两件事是必须要做的(对于监控可读事件而言)：<strong>1. 准备好需要监控的fds集合；2. 探测并返回fds集合中哪些fd可读了。</strong>细看select或poll的函数原型，我们会发现，每次调用select或poll都在重复地准备(集中处理)整个需要监控的fds集合。然而对于频繁调用的select或poll而言，fds集合的变化频率要低得多，我们没必要每次都重新准备(集中处理)整个fds集合。</p>
+<p>于是，epoll引入了epoll_ctl系统调用，<strong>将高频调用的epoll_wait和低频的epoll_ctl隔离开。</strong>同时，epoll_ctl通过(EPOLL_CTL_ADD、EPOLL_CTL_MOD、EPOLL_CTL_DEL)三个操作来分散对需要监控的fds集合的修改，做到了有变化才变更，将select或poll高频、大块内存拷贝(集中处理)变成epoll_ctl的低频、小块内存的拷贝(分散处理)，避免了大量的内存拷贝。同时，对于高频epoll_wait的可读就绪的fd集合返回的拷贝问题，epoll通过内核与用户空间mmap(内存映射)同一块内存来解决。<strong>mmap将用户空间的一块地址和内核空间的一块地址同时映射到相同的一块物理内存地址</strong>（不管是用户空间还是内核空间都是虚拟地址，最终要通过地址映射映射到物理地址），使得这块物理内存对内核和对用户均可见，<strong>减少用户态和内核态之间的数据交换。</strong></p>
+<p>另外，<strong>epoll通过epoll_ctl来对监控的fds集合来进行增、删、改，那么必须涉及到fd的快速查找问题</strong>，于是，一个低时间复杂度的增、删、改、查的数据结构来组织被监控的fds集合是必不可少的了。在linux 2.6.8之前的内核，epoll使用hash来组织fds集合，于是在创建epoll fd的时候，epoll需要初始化hash的大小。于是epoll_create(int size)有一个参数size，以便内核根据size的大小来分配hash的大小。在linux 2.6.8以后的内核中，<strong>epoll使用红黑树来组织监控的fds集合</strong>，于是epoll_create(int size)的参数size实际上已经没有意义了。</p>
+<h3 id="按需遍历就绪的fds集合"><a href="#按需遍历就绪的fds集合" class="headerlink" title="按需遍历就绪的fds集合"></a>按需遍历就绪的fds集合</h3><p>通过上面的socket的睡眠队列唤醒逻辑我们知道，socket唤醒睡眠在其睡眠队列的wait_entry(process)的时候会调用wait_entry的回调函数callback，并且，我们可以在callback中做任何事情。<strong>为了做到只遍历就绪的fd，我们需要有个地方来组织那些已经就绪的fd。</strong>为此，epoll引入了一个中间层，一个双向链表(ready_list)，一个单独的睡眠队列(single_epoll_wait_list)，并且，与select或poll不同的是，<strong>epoll的process不需要同时插入到多路复用的socket集合的所有睡眠队列中，相反process只是插入到中间层的epoll的单独睡眠队列中</strong>，process睡眠在epoll的单独队列上，等待事件的发生。同时，<strong>引入一个中间的wait_entry_sk，它与某个socket sk密切相关wait_entry_sk睡眠在sk的睡眠队列上，其callback函数逻辑是将当前sk排入到epoll的ready_list中，并唤醒epoll的single_epoll_wait_list。</strong>而single_epoll_wait_list上睡眠的<strong>process的回调函数</strong>就明朗了：<strong>遍历ready_list上的所有sk，挨个调用sk的poll函数收集事件，然后唤醒process从epoll_wait返回。</strong><br>于是，整个过程可以分为以下几个逻辑：</p>
+<blockquote>
+<p>我的理解：epoll分成epoll_wait和epoll_ctl，进程调用epoll_ctl构建出wait_entry_sk排入当前socket的睡眠队列中，并且这个wait_entry_sk被唤醒时，回调函数会把当前有事件的socket排队到ready_list中，并且会唤醒epoll的单独等待队列，这个单独等待队列有存着进程，进程也相应被唤醒，回调遍历ready_list的socket，这样就可以做到不遍历所有socket，而只针对发生了事件的socket。</p>
+</blockquote>
+<p>（1）epoll_ctl EPOLL_CTL_ADD逻辑</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>] 构建睡眠实体wait_entry_sk，将当前socket sk关联给wait_entry_sk，并设置wait_entry_sk的回调函数为epoll_callback_sk</span><br><span class="line">[<span class="number">2</span>] 将wait_entry_sk排入当前socket sk的睡眠队列上</span><br></pre></td></tr></table></figure>
+<p>回调函数epoll_callback_sk的逻辑如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>] 将之前关联的sk排入epoll的ready_list</span><br><span class="line">[<span class="number">2</span>] 然后唤醒epoll的单独睡眠队列single_epoll_wait_list</span><br></pre></td></tr></table></figure>
+<p>（2）epoll_wait逻辑</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>] 构建睡眠实体wait_entry_proc，将当前process关联给wait_entry_proc，并设置回调函数为epoll_callback_proc</span><br><span class="line">[<span class="number">2</span>] 判断epoll的ready_list是否为空，如果为空，则将wait_entry_proc排入epoll的single_epoll_wait_list中，随后进入schedule循环，这会导致调用epoll_wait的process睡眠。</span><br><span class="line">[<span class="number">3</span>] wait_entry_proc被事件唤醒或超时醒来，wait_entry_proc将被从single_epoll_wait_list移除掉，然后wait_entry_proc执行回调函数epoll_callback_proc</span><br></pre></td></tr></table></figure>
+<p>回调函数epoll_callback_proc的逻辑如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>] 遍历epoll的ready_list，挨个调用每个sk的poll逻辑收集发生的事件，对于监控可读事件而已，ready_list上的每个sk都是有数据可读的，这里的遍历必要的(不同于select/poll的遍历，它不管有没数据可读都需要遍历一些来判断，这样就做了很多无用功。)</span><br><span class="line">[<span class="number">2</span>] 将每个sk收集到的事件，通过epoll_wait传入的events数组回传并唤醒相应的process。</span><br></pre></td></tr></table></figure>
+<p>（3）epoll唤醒逻辑</p>
+<p>整个epoll的协议栈唤醒逻辑如下(对于可读事件而言)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>] 协议数据包到达网卡并被排入socket sk的接收队列</span><br><span class="line">[<span class="number">2</span>] 睡眠在sk的睡眠队列wait_entry被唤醒，wait_entry_sk的回调函数epoll_callback_sk被执行</span><br><span class="line">[<span class="number">3</span>] epoll_callback_sk将当前sk插入epoll的ready_list中</span><br><span class="line">[<span class="number">4</span>] 唤醒睡眠在epoll的单独睡眠队列single_epoll_wait_list的wait_entry，wait_entry_proc被唤醒执行回调函数epoll_callback_proc</span><br><span class="line">[<span class="number">5</span>] 遍历epoll的ready_list，挨个调用每个sk的poll逻辑收集发生的事件</span><br><span class="line">[<span class="number">6</span>] 将每个sk收集到的事件，通过epoll_wait传入的events数组回传并唤醒相应的process。</span><br></pre></td></tr></table></figure>
+<p><strong>epoll巧妙的引入一个中间层解决了大量监控socket的无效遍历问题</strong>。细心的同学会发现，epoll在中间层上为每个监控的socket准备了一个单独的回调函数epoll_callback_sk，而对于select/poll，所有的socket都公用一个相同的回调函数。正是这个单独的回调epoll_callback_sk使得每个socket都能单独处理自身，当自己就绪的时候将自身socket挂入epoll的ready_list。同时，epoll引入了一个睡眠队列single_epoll_wait_list，分割了两类睡眠等待。process不再睡眠在所有的socket的睡眠队列上，而是睡眠在epoll的睡眠队列上，在等待”任意一个socket可读就绪”事件。而中间wait_entry_sk则代替process睡眠在具体的socket上，当socket就绪的时候，它就可以处理自身了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/基础/" rel="tag"># 基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/02/mysql日志/" rel="next" title="mysql日志">
+                <i class="fa fa-chevron-left"></i> mysql日志
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/myavatar.jpg" alt="黄林杰">
+            
+              <p class="site-author-name" itemprop="name">黄林杰</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#select-和-epoll底层实现原理"><span class="nav-number">1.</span> <span class="nav-text">select 和 epoll底层实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内核接受网卡流量的整个流程"><span class="nav-number">1.1.</span> <span class="nav-text">内核接受网卡流量的整个流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#select的实现细节"><span class="nav-number">2.</span> <span class="nav-text">select的实现细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#epoll函数的实现细节"><span class="nav-number">3.</span> <span class="nav-text">epoll函数的实现细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux的socket-事件wakeup-callback机制"><span class="nav-number">4.</span> <span class="nav-text">Linux的socket 事件wakeup callback机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Select—1024"><span class="nav-number">5.</span> <span class="nav-text">Select—1024</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#poll—鸡肋"><span class="nav-number">6.</span> <span class="nav-text">poll—鸡肋</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#epoll—终极"><span class="nav-number">7.</span> <span class="nav-text">epoll—终极</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fds集合拷贝问题的解决"><span class="nav-number">7.1.</span> <span class="nav-text">fds集合拷贝问题的解决</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按需遍历就绪的fds集合"><span class="nav-number">7.2.</span> <span class="nav-text">按需遍历就绪的fds集合</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">黄林杰</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
