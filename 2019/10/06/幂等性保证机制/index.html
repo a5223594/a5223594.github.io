@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="redis,">
+  <meta name="keywords" content="系统,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="哨兵的介绍哨兵是redis集群架构中非常重要的一个组件，主要功能如下：  集群监控，负责监控redis master和slave进程是否正常工作 消息通知，如果某个redis实例有故障，那么哨兵负责发送消息作为报警通知给管理员 故障转移，如果master node挂掉了，会自动转移到slave node上 配置中心，如果故障转移发生了，通知client客户端新的master地址  哨兵本身也是分布">
-<meta name="keywords" content="redis">
+<meta name="description" content="幂等性概念在编程中.一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。指可以使用相同参数重复执行，并能获得相同结果，不用担心重复执行会对系统造成改变。 幂等性场景 查询操作：查询一次和查询多次，在数据不变的情况下，查询结果是一样的。select是天然的幂等操作； 删除操作：删除操作也是幂等的，删除一次和多次删除都是把数据删除。(注意可能返回结果不一样，删除的数据不存在，返回0，">
+<meta name="keywords" content="系统">
 <meta property="og:type" content="article">
-<meta property="og:title" content="哨兵sentinel">
-<meta property="og:url" content="http://yoursite.com/2019/09/25/哨兵sentinel/index.html">
+<meta property="og:title" content="幂等性保证机制">
+<meta property="og:url" content="http://yoursite.com/2019/10/06/幂等性保证机制/index.html">
 <meta property="og:site_name" content="黄林杰的个人博客">
-<meta property="og:description" content="哨兵的介绍哨兵是redis集群架构中非常重要的一个组件，主要功能如下：  集群监控，负责监控redis master和slave进程是否正常工作 消息通知，如果某个redis实例有故障，那么哨兵负责发送消息作为报警通知给管理员 故障转移，如果master node挂掉了，会自动转移到slave node上 配置中心，如果故障转移发生了，通知client客户端新的master地址  哨兵本身也是分布">
+<meta property="og:description" content="幂等性概念在编程中.一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。指可以使用相同参数重复执行，并能获得相同结果，不用担心重复执行会对系统造成改变。 幂等性场景 查询操作：查询一次和查询多次，在数据不变的情况下，查询结果是一样的。select是天然的幂等操作； 删除操作：删除操作也是幂等的，删除一次和多次删除都是把数据删除。(注意可能返回结果不一样，删除的数据不存在，返回0，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-25T05:20:47.946Z">
+<meta property="og:updated_time" content="2019-10-06T12:23:33.501Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="哨兵sentinel">
-<meta name="twitter:description" content="哨兵的介绍哨兵是redis集群架构中非常重要的一个组件，主要功能如下：  集群监控，负责监控redis master和slave进程是否正常工作 消息通知，如果某个redis实例有故障，那么哨兵负责发送消息作为报警通知给管理员 故障转移，如果master node挂掉了，会自动转移到slave node上 配置中心，如果故障转移发生了，通知client客户端新的master地址  哨兵本身也是分布">
+<meta name="twitter:title" content="幂等性保证机制">
+<meta name="twitter:description" content="幂等性概念在编程中.一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。指可以使用相同参数重复执行，并能获得相同结果，不用担心重复执行会对系统造成改变。 幂等性场景 查询操作：查询一次和查询多次，在数据不变的情况下，查询结果是一样的。select是天然的幂等操作； 删除操作：删除操作也是幂等的，删除一次和多次删除都是把数据删除。(注意可能返回结果不一样，删除的数据不存在，返回0，">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/09/25/哨兵sentinel/">
+  <link rel="canonical" href="http://yoursite.com/2019/10/06/幂等性保证机制/">
 
 
 
 
 
-  <title>哨兵sentinel | 黄林杰的个人博客</title>
+  <title>幂等性保证机制 | 黄林杰的个人博客</title>
   
 
 
@@ -295,7 +295,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/25/哨兵sentinel/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/06/幂等性保证机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="黄林杰">
@@ -312,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">哨兵sentinel</h1>
+          <h1 class="post-title" itemprop="name headline">幂等性保证机制</h1>
         
 
         <div class="post-meta">
@@ -324,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-25T13:15:47+08:00">
-                2019-09-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-06T20:22:59+08:00">
+                2019-10-06
               </time>
             
 
@@ -362,32 +362,25 @@
       
 
       
-        <h2 id="哨兵的介绍"><a href="#哨兵的介绍" class="headerlink" title="哨兵的介绍"></a>哨兵的介绍</h2><p>哨兵是redis集群架构中非常重要的一个组件，主要功能如下：</p>
-<ol>
-<li>集群监控，负责监控redis master和slave进程是否正常工作</li>
-<li>消息通知，如果某个redis实例有故障，那么哨兵负责发送消息作为报警通知给管理员</li>
-<li>故障转移，如果master node挂掉了，会自动转移到slave node上</li>
-<li>配置中心，如果故障转移发生了，通知client客户端新的master地址</li>
-</ol>
-<p>哨兵本身也是分布式的，作为一个哨兵集群去运行，互相协同工作</p>
-<ol>
-<li>故障转移时，判断一个master node是宕机了，需要大部分的哨兵都同意才行，涉及到了分布式选举的问题</li>
-<li>即使部分哨兵节点挂掉了，哨兵集群还是能正常工作的，因为如果一个作为高可用机制重要组成部分的故障转移系统本身是单点的，那就很坑爹了</li>
-</ol>
-<h2 id="哨兵的核心知识"><a href="#哨兵的核心知识" class="headerlink" title="哨兵的核心知识"></a>哨兵的核心知识</h2><ul>
-<li>哨兵至少需要3个实例，来保证自己的健壮性</li>
-<li>哨兵 + redis主从的部署架构，是不会保证数据零丢失的，只能保证redis集群的高可用性</li>
-<li>对于哨兵 + redis主从这种复杂的部署架构，尽量在测试环境和生产环境，都进行充足的测试和演练</li>
+        <h2 id="幂等性概念"><a href="#幂等性概念" class="headerlink" title="幂等性概念"></a><strong>幂等性概念</strong></h2><p>在编程中.一个幂等操作的特点是其<strong>任意多次执行所产生的影响均与一次执行的影响相同。</strong>指可以使用相同参数重复执行，并能获得相同结果，<strong>不用担心重复执行会对系统造成改变</strong>。</p>
+<h2 id="幂等性场景"><a href="#幂等性场景" class="headerlink" title="幂等性场景"></a><strong>幂等性场景</strong></h2><ul>
+<li>查询操作：查询一次和查询多次，在数据不变的情况下，查询结果是一样的。select是天然的幂等操作；</li>
+<li>删除操作：删除操作也是幂等的，删除一次和多次删除都是把数据删除。(注意可能返回结果不一样，删除的数据不存在，返回0，删除的数据多条，返回结果多个) ；</li>
+<li>修改操作：多次修改，因为主键约束，修改一次和修改多次，如果数据没变，操作相同。</li>
 </ul>
-<h2 id="为什么redis哨兵集群只有2个节点无法正常工作？"><a href="#为什么redis哨兵集群只有2个节点无法正常工作？" class="headerlink" title="为什么redis哨兵集群只有2个节点无法正常工作？"></a>为什么redis哨兵集群只有2个节点无法正常工作？</h2><p>哨兵集群必须部署2个以上节点<br>如果哨兵集群仅仅部署了个2个哨兵实例，quorum=1<br>master宕机，s1和s2中只要有1个哨兵认为master宕机就可以还行切换，同时s1和s2中会选举出一个哨兵来执行故障转移<br>同时这个时候，需要majority，也就是大多数哨兵都是运行的，2个哨兵的majority就是2（2的majority=2，3的majority=2，5的majority=3，4的majority=2），2个哨兵都运行着，就可以允许执行故障转移<br>但是如果整个M1和S1运行的机器宕机了，那么哨兵只有1个了，此时就没有majority来允许执行故障转移，虽然另外一台机器还有一个R1，但是故障转移不会执行</p>
-<p><strong>要有majority个哨兵同意故障转移，才行</strong>。</p>
-<h2 id="主备切换的过程，可能会导致数据丢失"><a href="#主备切换的过程，可能会导致数据丢失" class="headerlink" title="主备切换的过程，可能会导致数据丢失"></a>主备切换的过程，可能会导致数据丢失</h2><ul>
-<li>异步复制导致的数据丢失<br>因为master -&gt; slave的复制是异步的，所以可能有部分数据还没复制到slave，master就宕机了，此时这些部分数据就丢失了</li>
-<li>脑裂导致的数据丢失<br>脑裂，也就是说，某个master所在机器突然脱离了正常的网络，跟其他slave机器不能连接，但是实际上master还运行着<br>此时哨兵可能就会认为master宕机了，然后开启选举，将其他slave切换成了master<br>这个时候，集群里就会有两个master，也就是所谓的脑裂<br>此时虽然某个slave被切换成了master，但是可能<strong>client还没来得及切换到新的master，还继续写向旧master的数据可能也丢失了</strong><br>因此旧master再次恢复的时候，会被作为一个slave挂到新的master上去，自己的数据会清空，重新从新的master复制数据</li>
-</ul>
-<h2 id="解决异步复制和脑裂导致的数据丢失"><a href="#解决异步复制和脑裂导致的数据丢失" class="headerlink" title="解决异步复制和脑裂导致的数据丢失"></a>解决异步复制和脑裂导致的数据丢失</h2><p>min-slaves-to-write 1<br>min-slaves-max-lag 10<br>要求至少有1个slave，数据复制和同步的延迟不能超过10秒<br>如果说一旦所有的slave，数据复制和同步的延迟都超过了10秒钟，那么这个时候，master就不会再接收任何请求了<br>上面两个配置可以减少异步复制和脑裂导致的数据丢失</p>
-<h2 id="减少异步复制的数据丢失"><a href="#减少异步复制的数据丢失" class="headerlink" title="减少异步复制的数据丢失"></a>减少异步复制的数据丢失</h2><p>有了min-slaves-max-lag这个配置，就可以确保说，一旦slave复制数据和ack延时太长，就认为可能master宕机后损失的数据太多了，那么就拒绝写请求，这样可以把master宕机时由于部分数据未同步到slave导致的数据丢失降低的可控范围内</p>
-<h2 id="减少脑裂的数据丢失"><a href="#减少脑裂的数据丢失" class="headerlink" title="减少脑裂的数据丢失"></a>减少脑裂的数据丢失</h2><p>如果一个master出现了脑裂，跟其他slave丢了连接，那么上面两个配置可以确保说，如果不能继续给指定数量的slave发送数据，而且slave超过10秒没有给自己ack消息，那么就直接拒绝客户端的写请求<br>这样脑裂后的旧master就不会接受client的新数据，也就避免了数据丢失<br>上面的配置就确保了，如果跟任何一个slave丢了连接，在10秒后发现没有slave给自己ack，那么就拒绝新的写请求<br>因此在脑裂场景下，最多就丢失10秒的数据</p>
+<h2 id="保证幂等性措施"><a href="#保证幂等性措施" class="headerlink" title="保证幂等性措施"></a>保证幂等性措施</h2><h3 id="唯一索引"><a href="#唯一索引" class="headerlink" title="唯一索引"></a>唯一索引</h3><p>防止<strong>新增</strong>脏数据。比如：支付宝的资金账户，支付宝也有用户账户，每个用户只能有一个资金账户，怎么防止给用户创建资金账户多个，那么给资金账户表中的用户ID加唯一索引，所以一个用户新增成功一个资金账户记录。要点：唯一索引或唯一组合索引来防止新增数据存在脏数据（当表存在唯一索引，并发时新增报错时，再查询一次就可以了，数据应该已经存在了，返回结果即可）；需要合适的业务唯一字段</p>
+<h3 id="token机制"><a href="#token机制" class="headerlink" title="token机制"></a>token机制</h3><p>防止页面重复提交。原理上通过session token来实现的(<strong>也可以通过redis来实现</strong>)。当客户端<strong>请求页面时，服务器会生成一个随机数Token，并且将Token放置到session当中</strong>，然后将Token发给客户端（一般通过<strong>构造hidden表单</strong>）。下次客户端提交请求时，Token会<strong>随着表单一起提交到服务器端</strong>。</p>
+<p>服务器端<strong>第一次验证相同过后，会将session中的Token值更新下</strong>，<strong>若用户重复提交，第二次的验证判断将失败，因为用户提交的表单中的Token没变，但服务器端session中Token已经改变了。</strong></p>
+<h3 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h3><p>获取数据的时候加锁获取。select * from table_xxx where id=’xxx’ for update;<br>注意：<strong>id字段一定是主键或者唯一索引，不然是锁表，会死人的</strong>；悲观锁使用时一般伴随事务一起使用，数据锁定时间可能会很长，根据实际情况选用；</p>
+<h3 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h3><p><strong>只是在更新数据那一刻锁表</strong>，其他时间不锁表，所以相对于悲观锁，效率更高。乐观锁的实现方式多种多样可以通过version或者其他状态条件：</p>
+<ol>
+<li>通过版本号实现update table_xxx set name=#{name},version=version+1 where version=#{version}；</li>
+<li>通过条件限制 update table_xxx set avai_amount=avai_amount-#subAmount# where<br>avai_amount-#subAmount# &gt;= 0要求：quality-#subQuality# &gt;= 0<br>，这个情景适合不用版本号，只更新是做数据安全校验，适合库存模型，扣份额和回滚份额，性能更高；</li>
+</ol>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>如果是分布式系统，构建全局唯一索引比较困难，例如唯一性的字段没法确定，这时候可以引入分布式锁，通过第三方的系统(redis或zookeeper)，在业务系统插入数据或者更新数据，获取分布式锁，然后做操作，之后释放锁，这样其实是把多线程并发的锁的思路，引入多多个系统，也就是分布式系统中得解决思路。要点：某个长流程处理过程要求不能并发执行，可以<strong>在流程执行之前根据某个标志(用户ID+后缀等)获取分布式锁，其他流程执行时获取锁就会失败，也就是同一时间该流程只能有一个能执行成功，执行完成后，释放分布式锁(分布式锁要第三方系统提供)；</strong></p>
+<h3 id="select-insert"><a href="#select-insert" class="headerlink" title="select + insert"></a>select + insert</h3><p>并发不高的后台系统，或者一些任务JOB，为了支持幂等，支持重复执行，简单的处理方法是，<strong>先查询下一些关键数据，判断是否已经执行过，在进行业务处理，就可以了。</strong>注意：<strong>核心高并发流程不要用这种方法；</strong></p>
+<h3 id="状态机幂等"><a href="#状态机幂等" class="headerlink" title="状态机幂等"></a>状态机幂等</h3><p>在设计单据相关的业务，或者是任务相关的业务，肯定会涉及到状态机(状态变更图)，就是业务单据上面有个状态，状态在不同的情况下会发生变更，一般情况下存在有限状态机，这时候，如果状态机已经处于下一个状态，这时候来了一个上一个状态的变更，理论上是不能够变更的，这样的话，保证了有限状态机的幂等。注意：订单等单据类业务，存在很长的状态流转，一定要深刻理解状态机，对业务系统设计能力提高有很大帮助</p>
+<h3 id="对外提供接口的api如何保证幂等"><a href="#对外提供接口的api如何保证幂等" class="headerlink" title="对外提供接口的api如何保证幂等"></a>对外提供接口的api如何保证幂等</h3><p>如银联提供的付款接口：需要接入商户提交付款请求时附带：source来源，seq序列号；source+seq在数据库里面做唯一索引，防止多次付款(并发时，只能处理一个请求) 。<br>重点：对外提供接口为了支持幂等调用，接口有两个字段必须传，一个是来源source，一个是来源方序列号seq，这个两个字段在提供方系统里面做联合唯一索引，这样当第三方调用时，先在本方系统里面查询一下，是否已经处理过，返回相应处理结果；没有处理过，进行相应处理，返回结果。注意，为了幂等友好，一定要先查询一下，是否处理过该笔业务，不查询直接插入业务系统，会报错，但实际已经处理了。</p>
 
       
     </div>
@@ -405,7 +398,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/redis/" rel="tag"># redis</a>
+            <a href="/tags/系统/" rel="tag"># 系统</a>
           
         </div>
       
@@ -418,8 +411,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/25/redis主从复制/" rel="next" title="redis主从复制">
-                <i class="fa fa-chevron-left"></i> redis主从复制
+              <a href="/2019/10/06/mysql日志2/" rel="next" title="mysql日志2">
+                <i class="fa fa-chevron-left"></i> mysql日志2
               </a>
             
           </div>
@@ -427,10 +420,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/25/Explain/" rel="prev" title="Explain">
-                Explain <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -555,7 +544,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#哨兵的介绍"><span class="nav-number">1.</span> <span class="nav-text">哨兵的介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#哨兵的核心知识"><span class="nav-number">2.</span> <span class="nav-text">哨兵的核心知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么redis哨兵集群只有2个节点无法正常工作？"><span class="nav-number">3.</span> <span class="nav-text">为什么redis哨兵集群只有2个节点无法正常工作？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主备切换的过程，可能会导致数据丢失"><span class="nav-number">4.</span> <span class="nav-text">主备切换的过程，可能会导致数据丢失</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决异步复制和脑裂导致的数据丢失"><span class="nav-number">5.</span> <span class="nav-text">解决异步复制和脑裂导致的数据丢失</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#减少异步复制的数据丢失"><span class="nav-number">6.</span> <span class="nav-text">减少异步复制的数据丢失</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#减少脑裂的数据丢失"><span class="nav-number">7.</span> <span class="nav-text">减少脑裂的数据丢失</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#幂等性概念"><span class="nav-number">1.</span> <span class="nav-text">幂等性概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#幂等性场景"><span class="nav-number">2.</span> <span class="nav-text">幂等性场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保证幂等性措施"><span class="nav-number">3.</span> <span class="nav-text">保证幂等性措施</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#唯一索引"><span class="nav-number">3.1.</span> <span class="nav-text">唯一索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#token机制"><span class="nav-number">3.2.</span> <span class="nav-text">token机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#悲观锁"><span class="nav-number">3.3.</span> <span class="nav-text">悲观锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#乐观锁"><span class="nav-number">3.4.</span> <span class="nav-text">乐观锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式锁"><span class="nav-number">3.5.</span> <span class="nav-text">分布式锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select-insert"><span class="nav-number">3.6.</span> <span class="nav-text">select + insert</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#状态机幂等"><span class="nav-number">3.7.</span> <span class="nav-text">状态机幂等</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对外提供接口的api如何保证幂等"><span class="nav-number">3.8.</span> <span class="nav-text">对外提供接口的api如何保证幂等</span></a></li></ol></li></ol></div>
             
 
           </div>
