@@ -103,7 +103,8 @@
 <meta property="og:image" content="http://yoursite.com/2019/05/18/redis数据结构与对象/包含三个节点的压缩列表.png">
 <meta property="og:image" content="http://yoursite.com/2019/05/18/redis数据结构与对象/压缩列表节点的各个组成部分.png">
 <meta property="og:image" content="http://yoursite.com/2019/05/18/redis数据结构与对象/添加新节点到压缩列表.png">
-<meta property="og:updated_time" content="2019-10-07T06:26:30.040Z">
+<meta property="og:image" content="http://yoursite.com/2019/05/18/redis数据结构与对象/不同类型和编码的对象.png">
+<meta property="og:updated_time" content="2019-10-07T06:55:35.372Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis数据结构与对象">
 <meta name="twitter:description" content="简单动态字符串Redis没有直接使用C语言传统的字符串表示（以空字符结尾的字符数组，以下简称C字符串），而是自己构建了一种名为简单动态字符串（simple dynamic string，SDS）的抽象类型，并将SDS用作Redis的默认字符串表示。比如在Redis的数据库里面，包含字符串值的键值对在底层都是由SDS实现的。举个例子，如果客户端执行命令：12redis&amp;gt; SET msg &amp;qu">
@@ -567,6 +568,102 @@
 <p>这时，如果我们将一个长度大于等于254字节的新节点new设置为压缩列表的表头节点，那么new将成为e1的前置节点</p>
 <img src="/2019/05/18/redis数据结构与对象/添加新节点到压缩列表.png">
 <p>因为e1的previous_entry_length属性仅长1字节，它没办法保存新节点new的长度，所以程序将对压缩列表执行空间重分配操作，并将e1节点的previous_entry_length属性从原来的1字节长扩展为5字节长。正如扩展e1引发了对e2的扩展一样，扩展e2也会引发对e3的扩展，而扩展e3又会引发对e4的扩展……为了让每个节点的previous_entry_length属性都符合压缩列表对节点的要求，程序需要不断地对压缩列表执行空间重分配操作，直到eN为止。</p>
+<p>删除结点同理</p>
+<h2 id="不同类型和编码的对象"><a href="#不同类型和编码的对象" class="headerlink" title="不同类型和编码的对象"></a>不同类型和编码的对象</h2><img src="/2019/05/18/redis数据结构与对象/不同类型和编码的对象.png">
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><ul>
+<li><strong>使用整数值实现的字符串对象</strong></li>
+</ul>
+<ul>
+<li><p><strong>使用embstr编码的简单动态字符串实现的字符串对象</strong></p>
+</li>
+<li><p><strong>使用简单动态字符串实现的字符串对象</strong></p>
+</li>
+</ul>
+<p>字符串对象的编码可以是int、raw或者embstr。<br>如果一个字符串对象保存的是整数值，并且这个整数值可以用long类型来表示，那么字符串对象会将整数值保存在字符串对象结构的ptr属性里面（将void*转换成long），并将字符串对象的编码设置为int。</p>
+<p>如果字符串对象保存的是一个字符串值，并且<strong>这个字符串值的长度大于32字节</strong>，那么字符串对象将使用一个简单动态字符串（SDS）来保存这个字符串值，并将对象的编码设置为raw。</p>
+<p>如果字符串对象保存的是一个字符串值，并且这个字符串值的长度小于等于32字节，那么字符串对象将使用embstr编码的方式来保存这个字符串值。embstr编码是专门用于保存短字符串的一种优化编码方式，这种编码和raw编码一样，都使用redisObject结构和sdshdr结构来表示字符串对象，但raw编码会调用两次内存分配函数来分别创建redisObject结构和sdshdr结构，而embstr编码则通过调用一次内存分配函数来分配一块连续的空间，空间中依次包含redisObject和sdshdr两个结构。</p>
+<blockquote>
+<p>embstr编码将创建字符串对象所需的内存分配次数从raw编码的两次降低为一次。</p>
+<p>释放embstr编码的字符串对象只需要调用一次内存释放函数，而释放raw编码的字符串对象需要调用两次内存释放函数。</p>
+<p>因为embstr编码的字符串对象的所有数据都保存在一块连续的内存里面，所以这种编码的字符串对象比起raw编码的字符串对象能够更好地利用缓存带来的优势。</p>
+</blockquote>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><ul>
+<li><strong>使用压缩列表实现的列表对象</strong></li>
+<li><strong>使用双端链表实现的列表对象</strong></li>
+</ul>
+<p>列表对象的编码可以是ziplist或者linkedlist。</p>
+<p>ziplist编码的列表对象使用压缩列表作为底层实现，每个压缩列表节点（entry）保存了一个列表元素。</p>
+<p>linkedlist编码的列表对象使用双端链表作为底层实现，每个双端链表节点（node）都保存了一个字符串对象，而每个字符串对象都保存了一个列表元素。</p>
+<p>当列表对象可以同时满足以下两个条件时，列表对象使用ziplist编码：</p>
+<ul>
+<li>列表对象保存的所有字符串元素的长度都小于64字节；</li>
+<li>列表对象保存的元素数量小于512个；</li>
+</ul>
+<p>不能满足这两个条件的列表对象需要使用linkedlist编码。</p>
+<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><ul>
+<li><strong>使用压缩列表实现的哈希对象</strong></li>
+<li><strong>使用字典实现的哈希对象</strong></li>
+</ul>
+<p>哈希对象的编码可以是ziplist或者hashtable。</p>
+<p>ziplist编码的哈希对象使用压缩列表作为底层实现，每当有新的键值对要加入到哈希对象时，程序会先将保存了键的压缩列表节点推入到压缩列表表尾，然后再将保存了值的压缩列表节点推入到压缩列表表尾，因此：</p>
+<ul>
+<li><p>保存了同一键值对的两个节点总是紧挨在一起，保存键的节点在前，保存值的节点在后；</p>
+</li>
+<li><p>先添加到哈希对象中的键值对会被放在压缩列表的表头方向，而后来添加到哈希对象中的键值对会被放在压缩列表的表尾方向。</p>
+</li>
+</ul>
+<p>另一方面，hashtable编码的哈希对象使用字典作为底层实现，哈希对象中的每个键值对都使用一个字典键值对来保存：</p>
+<ul>
+<li><p>字典的每个键都是一个字符串对象，对象中保存了键值对的键；</p>
+</li>
+<li><p>字典的每个值都是一个字符串对象，对象中保存了键值对的值。</p>
+</li>
+</ul>
+<p>当哈希对象可以同时满足以下两个条件时，哈希对象使用ziplist编码：</p>
+<ul>
+<li><p>哈希对象保存的所有键值对的键和值的字符串长度都小于64字节；</p>
+</li>
+<li><p>哈希对象保存的键值对数量小于512个；</p>
+</li>
+</ul>
+<p>不能满足这两个条件的哈希对象需要使用hashtable编码。</p>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><ul>
+<li><strong>使用整数集合实现的集合对象</strong></li>
+<li><strong>使用字典实现的集合对象</strong></li>
+</ul>
+<p>集合对象的编码可以是intset或者hashtable。</p>
+<p>intset编码的集合对象使用整数集合作为底层实现，集合对象包含的所有元素都被保存在整数集合里面。</p>
+<p>另一方面，hashtable编码的集合对象使用字典作为底层实现，字典的每个键都是一个字符串对象，每个字符串对象包含了一个集合元素，而字典的值则全部被设置为NULL。</p>
+<p>当集合对象可以同时满足以下两个条件时，对象使用intset编码：</p>
+<ul>
+<li><p>集合对象保存的所有元素都是整数值；</p>
+</li>
+<li><p>集合对象保存的元素数量不超过512个。</p>
+</li>
+</ul>
+<p>不能满足这两个条件的集合对象需要使用hashtable编码。</p>
+<h3 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h3><ul>
+<li><p><strong>使用压缩列表实现的有序集合对象</strong></p>
+</li>
+<li><p><strong>使用跳跃表和字典实现的有序集合对象</strong></p>
+</li>
+</ul>
+<p>有序集合的编码可以是ziplist或者skiplist。</p>
+<p>ziplist编码的压缩列表对象使用压缩列表作为底层实现，每个集合元素使用两个紧挨在一起的压缩列表节点来保存，第一个节点保存元素的成员（member），而第二个元素则保存元素的分值（score）。</p>
+<p>压缩列表内的集合元素按分值从小到大进行排序，分值较小的元素被放置在靠近表头的方向，而分值较大的元素则被放置在靠近表尾的方向。</p>
+<p>skiplist编码的有序集合对象使用zset结构作为底层实现，一个zset结构同时包含一个字典和一个跳跃表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">typedef struct zset &#123;</span><br><span class="line">    zskiplist *zsl;</span><br><span class="line">    dict *dict;</span><br><span class="line">&#125; zset;</span><br></pre></td></tr></table></figure>
+<p>zset结构中的zsl跳跃表按分值从小到大保存了所有集合元素，每个跳跃表节点都保存了一个集合元素：跳跃表节点的object属性保存了元素的成员，而跳跃表节点的score属性则保存了元素的分值。通过这个跳跃表，程序可以对有序集合进行范围型操作，比如ZRANK、ZRANGE等命令就是基于跳跃表API来实现的。</p>
+<p>在理论上，有序集合可以单独使用字典或者跳跃表的其中一种数据结构来实现，但无论单独使用字典还是跳跃表，在性能上对比起同时使用字典和跳跃表都会有所降低。举个例子，如果我们只使用字典来实现有序集合，那么虽然以O（1）复杂度查找成员的分值这一特性会被保留，但是，因为字典以无序的方式来保存集合元素，所以每次在执行范围型操作——比如ZRANK、ZRANGE等命令时，程序都需要对字典保存的所有元素进行排序，完成这种排序需要至少O（NlogN）时间复杂度，以及额外的O（N）内存空间（因为要创建一个数组来保存排序后的元素）。</p>
+<p>另一方面，如果我们只使用跳跃表来实现有序集合，那么跳跃表执行范围型操作的所有优点都会被保留，但因为没有了字典，所以根据成员查找分值这一操作的复杂度将从O（1）上升为O（logN）。因为以上原因，为了让有序集合的查找和范围型操作都尽可能快地执行，Redis选择了同时使用字典和跳跃表两种数据结构来实现有序集合。</p>
+<p>当有序集合对象可以同时满足以下两个条件时，对象使用ziplist编码：</p>
+<ul>
+<li><p>有序集合保存的元素数量小于128个；</p>
+</li>
+<li><p>有序集合保存的所有元素成员的长度都小于64字节；</p>
+</li>
+</ul>
+<p>不能满足以上两个条件的有序集合对象将使用skiplist编码。</p>
 
       
     </div>
@@ -734,7 +831,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单动态字符串"><span class="nav-number">1.</span> <span class="nav-text">简单动态字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS的定义"><span class="nav-number">1.1.</span> <span class="nav-text">SDS的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS与C字符串的区别"><span class="nav-number">1.2.</span> <span class="nav-text">SDS与C字符串的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS空间分配策略"><span class="nav-number">1.3.</span> <span class="nav-text">SDS空间分配策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#空间预分配"><span class="nav-number">1.3.1.</span> <span class="nav-text">空间预分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#惰性空间释放"><span class="nav-number">1.3.2.</span> <span class="nav-text">惰性空间释放</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制安全"><span class="nav-number">1.4.</span> <span class="nav-text">二进制安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS总结"><span class="nav-number">1.5.</span> <span class="nav-text">SDS总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链表"><span class="nav-number">2.</span> <span class="nav-text">链表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#链表的实现"><span class="nav-number">2.1.</span> <span class="nav-text">链表的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">2.2.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字典"><span class="nav-number">3.</span> <span class="nav-text">字典</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字典的实现"><span class="nav-number">3.1.</span> <span class="nav-text">字典的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字典-1"><span class="nav-number">3.2.</span> <span class="nav-text">字典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希表"><span class="nav-number">3.3.</span> <span class="nav-text">哈希表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希表节点"><span class="nav-number">3.4.</span> <span class="nav-text">哈希表节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希算法"><span class="nav-number">3.5.</span> <span class="nav-text">哈希算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rehash"><span class="nav-number">3.6.</span> <span class="nav-text">rehash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希表的扩展与收缩"><span class="nav-number">3.7.</span> <span class="nav-text">哈希表的扩展与收缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#渐进式rehash"><span class="nav-number">3.8.</span> <span class="nav-text">渐进式rehash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#渐进式rehash执行期间的哈希表操作"><span class="nav-number">3.9.</span> <span class="nav-text">渐进式rehash执行期间的哈希表操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跳跃表"><span class="nav-number">4.</span> <span class="nav-text">跳跃表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#跳跃表的实现"><span class="nav-number">4.1.</span> <span class="nav-text">跳跃表的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跳跃表节点"><span class="nav-number">4.2.</span> <span class="nav-text">跳跃表节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#层"><span class="nav-number">4.3.</span> <span class="nav-text">层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前进指针"><span class="nav-number">4.4.</span> <span class="nav-text">前进指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨度"><span class="nav-number">4.5.</span> <span class="nav-text">跨度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后退指针"><span class="nav-number">4.6.</span> <span class="nav-text">后退指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分值和成员"><span class="nav-number">4.7.</span> <span class="nav-text">分值和成员</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整数集合"><span class="nav-number">5.</span> <span class="nav-text">整数集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#整数集合的实现"><span class="nav-number">5.1.</span> <span class="nav-text">整数集合的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级"><span class="nav-number">5.2.</span> <span class="nav-text">升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级的好处"><span class="nav-number">5.3.</span> <span class="nav-text">升级的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#降级"><span class="nav-number">5.4.</span> <span class="nav-text">降级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩列表"><span class="nav-number">6.</span> <span class="nav-text">压缩列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩列表节点的构成"><span class="nav-number">6.1.</span> <span class="nav-text">压缩列表节点的构成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#previous-entry-length"><span class="nav-number">6.1.1.</span> <span class="nav-text">previous_entry_length</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连锁更新"><span class="nav-number">6.2.</span> <span class="nav-text">连锁更新</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单动态字符串"><span class="nav-number">1.</span> <span class="nav-text">简单动态字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS的定义"><span class="nav-number">1.1.</span> <span class="nav-text">SDS的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS与C字符串的区别"><span class="nav-number">1.2.</span> <span class="nav-text">SDS与C字符串的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS空间分配策略"><span class="nav-number">1.3.</span> <span class="nav-text">SDS空间分配策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#空间预分配"><span class="nav-number">1.3.1.</span> <span class="nav-text">空间预分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#惰性空间释放"><span class="nav-number">1.3.2.</span> <span class="nav-text">惰性空间释放</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制安全"><span class="nav-number">1.4.</span> <span class="nav-text">二进制安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDS总结"><span class="nav-number">1.5.</span> <span class="nav-text">SDS总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链表"><span class="nav-number">2.</span> <span class="nav-text">链表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#链表的实现"><span class="nav-number">2.1.</span> <span class="nav-text">链表的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">2.2.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字典"><span class="nav-number">3.</span> <span class="nav-text">字典</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字典的实现"><span class="nav-number">3.1.</span> <span class="nav-text">字典的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字典-1"><span class="nav-number">3.2.</span> <span class="nav-text">字典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希表"><span class="nav-number">3.3.</span> <span class="nav-text">哈希表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希表节点"><span class="nav-number">3.4.</span> <span class="nav-text">哈希表节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希算法"><span class="nav-number">3.5.</span> <span class="nav-text">哈希算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rehash"><span class="nav-number">3.6.</span> <span class="nav-text">rehash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希表的扩展与收缩"><span class="nav-number">3.7.</span> <span class="nav-text">哈希表的扩展与收缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#渐进式rehash"><span class="nav-number">3.8.</span> <span class="nav-text">渐进式rehash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#渐进式rehash执行期间的哈希表操作"><span class="nav-number">3.9.</span> <span class="nav-text">渐进式rehash执行期间的哈希表操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跳跃表"><span class="nav-number">4.</span> <span class="nav-text">跳跃表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#跳跃表的实现"><span class="nav-number">4.1.</span> <span class="nav-text">跳跃表的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跳跃表节点"><span class="nav-number">4.2.</span> <span class="nav-text">跳跃表节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#层"><span class="nav-number">4.3.</span> <span class="nav-text">层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前进指针"><span class="nav-number">4.4.</span> <span class="nav-text">前进指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨度"><span class="nav-number">4.5.</span> <span class="nav-text">跨度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后退指针"><span class="nav-number">4.6.</span> <span class="nav-text">后退指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分值和成员"><span class="nav-number">4.7.</span> <span class="nav-text">分值和成员</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整数集合"><span class="nav-number">5.</span> <span class="nav-text">整数集合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#整数集合的实现"><span class="nav-number">5.1.</span> <span class="nav-text">整数集合的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级"><span class="nav-number">5.2.</span> <span class="nav-text">升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#升级的好处"><span class="nav-number">5.3.</span> <span class="nav-text">升级的好处</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#降级"><span class="nav-number">5.4.</span> <span class="nav-text">降级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩列表"><span class="nav-number">6.</span> <span class="nav-text">压缩列表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩列表节点的构成"><span class="nav-number">6.1.</span> <span class="nav-text">压缩列表节点的构成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#previous-entry-length"><span class="nav-number">6.1.1.</span> <span class="nav-text">previous_entry_length</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连锁更新"><span class="nav-number">6.2.</span> <span class="nav-text">连锁更新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不同类型和编码的对象"><span class="nav-number">7.</span> <span class="nav-text">不同类型和编码的对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#string"><span class="nav-number">7.1.</span> <span class="nav-text">string</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list"><span class="nav-number">7.2.</span> <span class="nav-text">list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash"><span class="nav-number">7.3.</span> <span class="nav-text">hash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#set"><span class="nav-number">7.4.</span> <span class="nav-text">set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zset"><span class="nav-number">7.5.</span> <span class="nav-text">zset</span></a></li></ol></li></ol></div>
             
 
           </div>
